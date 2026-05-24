@@ -22,91 +22,11 @@ const config = {
 
 const shopSeeds = [
   {
-    name: "Downtown Bazaar",
-    address: "Market Street 12",
-    offset: { lat: 0.008, lng: 0.006 },
+    name: "My Local Store",
+    address: "Main Market, Sector 1",
+    offset: { lat: 0, lng: 0 },
     deliveryRadiusKm: 5,
-    products: [
-      {
-        name: "Wireless Earbuds",
-        description: "Compact earbuds with clear sound and long battery life.",
-        price: 49.99,
-        category: "Audio",
-        stock: 24,
-      },
-      {
-        name: "Smartphone Case",
-        description: "Shock-resistant case with soft grip finish.",
-        price: 12.5,
-        category: "Accessories",
-        stock: 60,
-      },
-      {
-        name: "LED Desk Lamp",
-        description: "Adjustable brightness lamp for study and work.",
-        price: 29.99,
-        category: "Electronics",
-        stock: 18,
-      },
-    ],
-  },
-  {
-    name: "Greenleaf Market",
-    address: "Lakeview Road 5",
-    offset: { lat: -0.01, lng: 0.009 },
-    deliveryRadiusKm: 6,
-    products: [
-      {
-        name: "Organic Face Wash",
-        description: "Gentle cleanser for daily skin care routine.",
-        price: 14.25,
-        category: "Beauty",
-        stock: 40,
-      },
-      {
-        name: "Yoga Mat",
-        description: "Non-slip mat for workouts and stretching.",
-        price: 22.0,
-        category: "Sports",
-        stock: 30,
-      },
-      {
-        name: "Aroma Diffuser",
-        description: "Compact diffuser with ambient lighting.",
-        price: 34.75,
-        category: "Home",
-        stock: 12,
-      },
-    ],
-  },
-  {
-    name: "Campus Store",
-    address: "College Avenue 44",
-    offset: { lat: 0.006, lng: -0.012 },
-    deliveryRadiusKm: 4,
-    products: [
-      {
-        name: "Canvas Backpack",
-        description: "Durable backpack with padded laptop sleeve.",
-        price: 39.9,
-        category: "Clothing",
-        stock: 22,
-      },
-      {
-        name: "Graphic Novel Set",
-        description: "Popular graphic novels bundle with 3 volumes.",
-        price: 27.5,
-        category: "Books",
-        stock: 15,
-      },
-      {
-        name: "Gaming Mouse",
-        description: "Ergonomic mouse with adjustable DPI settings.",
-        price: 24.99,
-        category: "Gaming",
-        stock: 35,
-      },
-    ],
+    products: [], // User will add their own products
   },
 ];
 

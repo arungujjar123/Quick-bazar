@@ -1,0 +1,159 @@
+.qb-offers-page {
+  padding-bottom: 5rem;
+  min-height: 100vh;
+  background: #fafaf9; /* Warm light background */
+}
+
+.qb-offers-hero {
+  background: linear-gradient(135deg, #1e1b4b 0%, #4338ca 100%);
+  color: white;
+  padding: 6rem 2rem;
+  text-align: center;
+  border-radius: 0 0 40px 40px;
+  margin-bottom: 4rem;
+  position: relative;
+  overflow: hidden;
+}
+
+.qb-offers-hero::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 60%);
+  animation: rotateBg 20s linear infinite;
+}
+
+@keyframes rotateBg {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.qb-offers-hero-content {
+  position: relative;
+  z-index: 2;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.qb-offers-badge {
+  display: inline-block;
+  background: rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(10px);
+  padding: 0.5rem 1.5rem;
+  border-radius: 30px;
+  font-weight: 700;
+  font-size: 0.9rem;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  margin-bottom: 1.5rem;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.qb-offers-hero h1 {
+  font-size: 4rem;
+  font-weight: 900;
+  margin-bottom: 1.5rem;
+  line-height: 1.1;
+}
+
+.qb-offers-hero h1 span {
+  color: #fbbf24; /* Golden yellow */
+}
+
+.qb-offers-hero p {
+  font-size: 1.25rem;
+  opacity: 0.9;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.qb-offers-section {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 0 2rem;
+}
+
+.qb-offers-header {
+  margin-bottom: 2rem;
+}
+
+.qb-offers-header h2 {
+  font-size: 2.2rem;
+  font-weight: 800;
+  color: #0f172a;
+}
+
+.qb-promo-banners {
+  max-width: 1280px;
+  margin: 4rem auto;
+  padding: 0 2rem;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+  gap: 2rem;
+}
+
+.qb-promo-banner {
+  border-radius: 24px;
+  padding: 3rem;
+  display: flex;
+  align-items: center;
+  position: relative;
+  overflow: hidden;
+  color: white;
+  min-height: 250px;
+}
+
+.qb-promo-1 {
+  background: linear-gradient(45deg, #be123c, #e11d48);
+}
+
+.qb-promo-2 {
+  background: linear-gradient(45deg, #047857, #10b981);
+}
+
+.qb-promo-banner::after {
+  content: '🏷️';
+  position: absolute;
+  right: -20px;
+  bottom: -40px;
+  font-size: 10rem;
+  opacity: 0.2;
+  transform: rotate(-15deg);
+}
+
+.qb-promo-text {
+  position: relative;
+  z-index: 2;
+  max-width: 70%;
+}
+
+.qb-promo-text h3 {
+  font-size: 2rem;
+  font-weight: 800;
+  margin-bottom: 0.5rem;
+}
+
+.qb-promo-text p {
+  font-size: 1.1rem;
+  margin-bottom: 2rem;
+  opacity: 0.9;
+}
+
+.qb-promo-btn {
+  display: inline-block;
+  background: white;
+  color: #0f172a;
+  padding: 0.8rem 2rem;
+  border-radius: 30px;
+  font-weight: 700;
+  text-decoration: none;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.qb-promo-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+}

@@ -193,9 +193,11 @@ export const CartProvider = ({ children }) => {
   const value = {
     cartItemCount,
     cart,
+    cartItems: cart.items || [],
     fetchCartCount,
     addToCart,
     removeFromCart,
+    updateQuantity: updateCartItem,
     updateCartItem,
     clearCart,
   };

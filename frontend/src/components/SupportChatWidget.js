@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState, useCallback } from "react";
 import axios from "axios";
+import "./SupportChatWidget.css";
 
 const API_BASE_URL =
   process.env.REACT_APP_API_BASE_URL ||
@@ -103,6 +104,24 @@ function OrderCards({ data }) {
   );
 }
 
+function ShopCards({ data }) {
+  if (!data || data.length === 0) return null;
+  return (
+    <div className="agent-shops-list">
+      {data.map((shop, i) => (
+        <div key={i} className="agent-shop-card">
+          <div className="agent-shop-icon">🏬</div>
+          <div className="agent-shop-details">
+            <strong>{shop.name}</strong>
+            <span>{shop.address}, {shop.city}</span>
+            <small>📍 {shop.radius}km delivery radius</small>
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+}
+
 function RichContent({ toolResult }) {
   if (!toolResult || !toolResult.success) return null;
 
@@ -167,6 +186,9 @@ function RichContent({ toolResult }) {
           </a>
         </div>
       ) : null;
+
+    case "shops":
+      return <ShopCards data={toolResult.data} />;
 
     default:
       return null;
@@ -324,6 +346,15 @@ function SupportChatWidget() {
     }
   };
 
+  const handleClearChat = () => {
+    if (window.confirm("Are you sure you want to clear the chat history?")) {
+      setMessages([]);
+      setInitialized(false);
+      setOpen(false);
+      setTimeout(() => setOpen(true), 100);
+    }
+  };
+
   const handleImageUpload = async (e) => {
     const file = e.target.files[0];
     if (!file) return;
@@ -412,14 +443,24 @@ function SupportChatWidget() {
                 <span>Smart Shopping Assistant</span>
               </div>
             </div>
-            <button
-              type="button"
-              className="agent-chat-close"
-              onClick={() => setOpen(false)}
-              aria-label="Close chat"
-            >
-              ✕
-            </button>
+            <div className="agent-chat-header-actions">
+              <button
+                type="button"
+                className="agent-chat-clear"
+                onClick={handleClearChat}
+                title="Clear Chat"
+              >
+                🗑️
+              </button>
+              <button
+                type="button"
+                className="agent-chat-close"
+                onClick={() => setOpen(false)}
+                aria-label="Close chat"
+              >
+                ✕
+              </button>
+            </div>
           </div>
 
           {/* Messages */}
@@ -565,12 +606,22 @@ function SupportChatWidget() {
 
 function formatMessage(text) {
   if (!text) return "";
-  return text
+  
+  // Clean up any remaining TOOL_CALL or JSON blocks that might have leaked
+  let cleaned = text
+    .replace(/TOOL_CALL\s*:\s*\{[^}]*(\{[^}]*\}[^}]*)?\}/gi, "")
+    .replace(/```json[\s\S]*?```/gi, "")
+    .trim();
+
+  if (!cleaned) return "<em>Fetching data...</em>";
+
+  return cleaned
     .replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>")
+    .replace(/\*(.*?)\*/g, "<em>$1</em>")
     .replace(/\n/g, "<br/>")
     .replace(
       /`(.*?)`/g,
-      '<code style="background:rgba(231,111,81,0.12);padding:2px 6px;border-radius:4px;font-size:0.85em">$1</code>',
+      '<code style="background:rgba(99,102,241,0.1);padding:2px 6px;border-radius:4px;font-size:0.85em">$1</code>',
     );
 }
 

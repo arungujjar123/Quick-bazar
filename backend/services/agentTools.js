@@ -83,6 +83,14 @@ const TOOL_DEFINITIONS = [
       "Get personalized product recommendations for the user based on their browsing history and preferences.",
     parameters: {},
   },
+  {
+    name: "find_nearby_shops",
+    description:
+      "Find shops near the user's city or location. Use when user asks for shops nearby, local sellers, or where to buy items in person.",
+    parameters: {
+      city: "Name of the city to find shops in",
+    },
+  },
 ];
 
 // ============ TOOL IMPLEMENTATIONS ============
@@ -577,6 +585,48 @@ async function getRecommendations(userId, userActivity) {
   }
 }
 
+/**
+ * Find shops in a specific city
+ */
+async function findNearbyShops(city) {
+  try {
+    const query = city ? { city: { $regex: new RegExp(city, "i") } } : {};
+    const shops = await Shop.find(query).limit(5);
+
+    if (shops.length === 0) {
+      return {
+        success: true,
+        type: "shops",
+        data: [],
+        message: city
+          ? `I couldn't find any shops in ${city} right now.`
+          : "I couldn't find any registered shops at the moment.",
+      };
+    }
+
+    return {
+      success: true,
+      type: "shops",
+      data: shops.map((s) => ({
+        id: s._id.toString(),
+        name: s.name,
+        address: s.address,
+        city: s.city,
+        radius: s.deliveryRadiusKm || 5,
+      })),
+      message: city
+        ? `Here are some shops I found in ${city}:`
+        : "Here are some of our popular shops:",
+    };
+  } catch (error) {
+    return {
+      success: false,
+      message: "Failed to find shops.",
+      type: "text",
+    };
+  }
+}
+
 // ============ TOOL EXECUTOR ============
 
 /**
@@ -607,6 +657,9 @@ async function executeTool(toolName, args, userId) {
 
     case "get_recommendations":
       return getRecommendations(userId, args.user_activity || null);
+
+    case "find_nearby_shops":
+      return findNearbyShops(args.city || "");
 
     default:
       return {
@@ -686,4 +739,5 @@ module.exports = {
   searchProducts,
   addToCart,
   getRecommendations,
+  findNearbyShops,
 };

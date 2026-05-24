@@ -25,13 +25,13 @@ function AdminAddProduct() {
   const navigate = useNavigate();
 
   const categories = [
-    "Electronics",
-    "Smartphones",
-    "Laptops",
-    "Audio",
-    "Accessories",
-    "Wearables",
-    "Gaming",
+    "Groceries",
+    "Dairy & Bakery",
+    "Fruits & Vegetables",
+    "Snacks & Drinks",
+    "Beauty & Personal Care",
+    "Household Items",
+    "Stationery",
     "Other",
   ];
 
@@ -243,7 +243,7 @@ function AdminAddProduct() {
                     color: "#333",
                   }}
                 >
-                  Price ($) *
+                  Price (₹) *
                 </label>
                 <input
                   type="number"

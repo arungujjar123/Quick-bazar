@@ -1,0 +1,392 @@
+/* SupportChatWidget.css - Premium AI Agent Styling */
+
+:root {
+  --agent-purple: #6366f1;
+  --agent-purple-light: #818cf8;
+  --agent-bg: rgba(255, 255, 255, 0.85);
+  --agent-text: #1e293b;
+  --agent-text-muted: #64748b;
+  --agent-shadow: 0 20px 50px rgba(0, 0, 0, 0.15);
+  --agent-radius: 24px;
+}
+
+.agent-chat {
+  position: fixed;
+  bottom: 2rem;
+  right: 2rem;
+  z-index: 9999;
+  font-family: 'Inter', sans-serif;
+}
+
+/* Floating Action Button */
+.agent-chat-fab {
+  width: 64px;
+  height: 64px;
+  background: var(--agent-purple);
+  border: none;
+  border-radius: 20px;
+  color: white;
+  font-size: 1.75rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 10px 25px rgba(99, 102, 241, 0.4);
+  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  position: relative;
+  overflow: hidden;
+}
+
+.agent-chat-fab:hover {
+  transform: translateY(-5px) scale(1.05);
+  box-shadow: 0 15px 35px rgba(99, 102, 241, 0.5);
+}
+
+.agent-fab-pulse {
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  border-radius: inherit;
+  border: 4px solid var(--agent-purple);
+  animation: fab-pulse 2s infinite;
+  pointer-events: none;
+}
+
+@keyframes fab-pulse {
+  0% { transform: scale(1); opacity: 0.8; }
+  100% { transform: scale(1.6); opacity: 0; }
+}
+
+/* Chat Panel */
+.agent-chat-panel {
+  width: 400px;
+  height: 620px;
+  background: var(--agent-bg);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  border-radius: var(--agent-radius);
+  box-shadow: var(--agent-shadow);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  animation: panel-pop 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.1) forwards;
+  transform-origin: bottom right;
+}
+
+@keyframes panel-pop {
+  from { opacity: 0; transform: scale(0.8) translateY(20px); }
+  to { opacity: 1; transform: scale(1) translateY(0); }
+}
+
+/* Header */
+.agent-chat-header {
+  padding: 1.5rem;
+  background: white;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.agent-chat-header-info {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.agent-chat-avatar {
+  width: 44px;
+  height: 44px;
+  background: var(--agent-purple);
+  color: white;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 800;
+  position: relative;
+}
+
+.agent-chat-status {
+  position: absolute;
+  bottom: -2px;
+  right: -2px;
+  width: 12px;
+  height: 12px;
+  background: #10b981;
+  border: 2px solid white;
+  border-radius: 50%;
+}
+
+.agent-chat-header-info h4 {
+  font-size: 1rem;
+  font-weight: 800;
+  margin: 0;
+}
+
+.agent-chat-header-info span {
+  font-size: 0.75rem;
+  color: var(--agent-text-muted);
+  font-weight: 600;
+}
+
+.agent-chat-close {
+  background: none;
+  border: none;
+  font-size: 1.2rem;
+  color: var(--agent-text-muted);
+  cursor: pointer;
+  padding: 0.5rem;
+  transition: all 0.2s;
+}
+
+.agent-chat-close:hover { color: #ef4444; }
+
+.agent-chat-header-actions {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.agent-chat-clear {
+  background: none;
+  border: none;
+  font-size: 1.1rem;
+  cursor: pointer;
+  padding: 0.5rem;
+  opacity: 0.6;
+  transition: all 0.2s;
+  border-radius: 8px;
+}
+
+.agent-chat-clear:hover {
+  opacity: 1;
+  background: rgba(0,0,0,0.05);
+}
+
+/* Messages Area */
+.agent-chat-messages {
+  flex: 1;
+  padding: 1.5rem;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.agent-msg {
+  display: flex;
+  gap: 0.75rem;
+  max-width: 85%;
+}
+
+.agent-msg.user {
+  align-self: flex-end;
+  flex-direction: row-reverse;
+}
+
+.agent-msg-avatar {
+  width: 32px;
+  height: 32px;
+  background: #e2e8f0;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.8rem;
+  font-weight: 800;
+  flex-shrink: 0;
+}
+
+.agent-msg.assistant .agent-msg-avatar {
+  background: var(--agent-purple);
+  color: white;
+}
+
+.agent-msg-bubble {
+  padding: 0.85rem 1.1rem;
+  border-radius: 18px;
+  font-size: 0.95rem;
+  line-height: 1.5;
+  font-weight: 500;
+}
+
+.agent-msg.assistant .agent-msg-bubble {
+  background: white;
+  color: var(--agent-text);
+  border-bottom-left-radius: 4px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.03);
+}
+
+.agent-msg.user .agent-msg-bubble {
+  background: var(--agent-purple);
+  color: white;
+  border-bottom-right-radius: 4px;
+  box-shadow: 0 4px 15px rgba(99, 102, 241, 0.2);
+}
+
+.agent-msg-image {
+  max-width: 100%;
+  border-radius: 12px;
+  margin-bottom: 0.75rem;
+}
+
+/* Rich Content */
+.agent-products-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.agent-product-card {
+  background: #f8fafc;
+  border-radius: 16px;
+  padding: 0.75rem;
+  display: flex;
+  gap: 1rem;
+  text-decoration: none;
+  color: inherit;
+  border: 1px solid #f1f5f9;
+  transition: all 0.2s;
+}
+
+.agent-product-card:hover { background: white; transform: translateY(-2px); box-shadow: 0 5px 15px rgba(0,0,0,0.05); }
+
+.agent-product-card img { width: 64px; height: 64px; border-radius: 10px; object-fit: cover; }
+
+.agent-product-info { display: flex; flex-direction: column; gap: 0.25rem; }
+
+.agent-product-info strong { font-size: 0.9rem; font-weight: 700; }
+
+.agent-product-price { color: var(--agent-purple); font-weight: 800; font-size: 0.85rem; }
+
+/* Shops List */
+.agent-shops-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  margin-top: 1rem;
+}
+
+.agent-shop-card {
+  display: flex;
+  gap: 1rem;
+  padding: 1rem;
+  background: #f8fafc;
+  border-radius: 16px;
+  border: 1px solid #f1f5f9;
+}
+
+.agent-shop-icon {
+  font-size: 1.5rem;
+}
+
+.agent-shop-details {
+  display: flex;
+  flex-direction: column;
+}
+
+.agent-shop-details strong {
+  font-size: 0.95rem;
+  color: var(--agent-text);
+}
+
+.agent-shop-details span {
+  font-size: 0.85rem;
+  color: var(--agent-text-muted);
+}
+
+.agent-shop-details small {
+  font-size: 0.75rem;
+  color: var(--agent-purple);
+  font-weight: 600;
+  margin-top: 0.25rem;
+}
+
+/* Typing Indicator */
+.agent-typing {
+  display: flex;
+  gap: 4px;
+  padding: 4px 0;
+}
+
+.agent-typing-dot {
+  width: 6px;
+  height: 6px;
+  background: #cbd5e1;
+  border-radius: 50%;
+  animation: typing 1.4s infinite ease-in-out;
+}
+
+.agent-typing-dot:nth-child(1) { animation-delay: 0s; }
+.agent-typing-dot:nth-child(2) { animation-delay: 0.2s; }
+.agent-typing-dot:nth-child(3) { animation-delay: 0.4s; }
+
+@keyframes typing {
+  0%, 80%, 100% { transform: scale(0.6); opacity: 0.4; }
+  40% { transform: scale(1); opacity: 1; }
+}
+
+/* Input Area */
+.agent-chat-input {
+  padding: 1.25rem;
+  background: white;
+  border-top: 1px solid rgba(0, 0, 0, 0.05);
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.agent-chat-input textarea {
+  flex: 1;
+  background: #f1f5f9;
+  border: none;
+  border-radius: 16px;
+  padding: 0.75rem 1rem;
+  font-family: inherit;
+  font-size: 0.95rem;
+  resize: none;
+  outline: none;
+  max-height: 120px;
+}
+
+.agent-upload-btn, .agent-send-btn {
+  width: 42px;
+  height: 42px;
+  border-radius: 12px;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-size: 1.2rem;
+}
+
+.agent-upload-btn { background: #f1f5f9; color: var(--agent-text-muted); }
+.agent-send-btn { background: var(--agent-purple); color: white; }
+.agent-send-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+/* Suggestions */
+.agent-suggestions {
+  display: flex;
+  gap: 0.5rem;
+  padding: 0 1.25rem 1rem;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+
+.agent-suggestion-chip {
+  white-space: nowrap;
+  padding: 0.5rem 1rem;
+  background: white;
+  border: 1px solid #e2e8f0;
+  border-radius: var(--radius-full);
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.agent-suggestion-chip:hover { border-color: var(--agent-purple); color: var(--agent-purple); background: #f5f7ff; }

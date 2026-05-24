@@ -1,0 +1,245 @@
+/* ProfileRedesign.css */
+
+.qb-profile-page {
+  padding: 4rem 0;
+  background: #f8fafc;
+  min-height: calc(100vh - 80px);
+}
+
+.qb-profile-grid {
+  display: grid;
+  grid-template-columns: 320px 1fr;
+  gap: 2.5rem;
+  align-items: start;
+}
+
+/* Side Card */
+.qb-profile-side {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.qb-profile-user-card {
+  background: white;
+  border-radius: 24px;
+  padding: 2.5rem;
+  text-align: center;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+  border: 1px solid #e2e8f0;
+}
+
+.qb-avatar-wrapper {
+  position: relative;
+  width: 120px;
+  height: 120px;
+  margin: 0 auto 1.5rem;
+}
+
+.qb-avatar-wrapper img {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 4px solid white;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+}
+
+.qb-avatar-edit {
+  position: absolute;
+  bottom: 5px;
+  right: 5px;
+  background: var(--qb-purple);
+  color: white;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 3px solid white;
+  cursor: pointer;
+  font-size: 0.8rem;
+}
+
+.qb-profile-user-card h3 {
+  font-size: 1.5rem;
+  font-weight: 800;
+  margin-bottom: 0.25rem;
+}
+
+.qb-profile-user-card p {
+  color: var(--text-muted);
+  font-size: 0.9rem;
+  margin-bottom: 1.25rem;
+  font-weight: 500;
+}
+
+.qb-membership-badge {
+  background: #fff7ed;
+  color: #c2410c;
+  padding: 0.4rem 1rem;
+  border-radius: 12px;
+  font-size: 0.85rem;
+  font-weight: 700;
+  display: inline-block;
+}
+
+.qb-profile-nav {
+  background: white;
+  border-radius: 24px;
+  padding: 1rem;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+  border: 1px solid #e2e8f0;
+}
+
+.qb-profile-nav button {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem 1.25rem;
+  border: none;
+  background: none;
+  border-radius: 14px;
+  font-weight: 600;
+  color: var(--text-dark);
+  cursor: pointer;
+  transition: var(--transition);
+  font-size: 0.95rem;
+}
+
+.qb-profile-nav button.active {
+  background: #f1f5ff;
+  color: var(--qb-purple);
+  border-left: 4px solid var(--qb-purple);
+  border-radius: 0 14px 14px 0;
+  margin-left: -1rem;
+  padding-left: 2rem;
+}
+
+/* Main Panels */
+.qb-profile-main {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.qb-profile-panel {
+  background: white;
+  border-radius: 24px;
+  padding: 2.5rem;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+  border: 1px solid #e2e8f0;
+}
+
+.qb-profile-panel h2 {
+  font-size: 1.5rem;
+  font-weight: 800;
+  margin-bottom: 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.qb-form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
+}
+
+.qb-input-group label {
+  display: block;
+  font-weight: 700;
+  font-size: 0.85rem;
+  color: var(--text-dark);
+  margin-bottom: 0.6rem;
+}
+
+.qb-input-group input {
+  width: 100%;
+  padding: 1rem 1.25rem;
+  border-radius: 14px;
+  border: 1.5px solid #e2e8f0;
+  background: #fcfcfd;
+  font-size: 1rem;
+  outline: none;
+  transition: var(--transition);
+}
+
+.qb-input-group input:focus {
+  border-color: var(--qb-purple);
+  background: white;
+  box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.08);
+}
+
+.qb-btn-save {
+  background: var(--grad-premium);
+  color: white;
+  border: none;
+  padding: 1rem 2rem;
+  border-radius: 14px;
+  font-weight: 700;
+  font-size: 1rem;
+  cursor: pointer;
+  margin-top: 2rem;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  float: right;
+}
+
+/* Orders List */
+.qb-mini-order {
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+  padding: 1.25rem;
+  border-radius: 16px;
+  background: #f8fafc;
+  margin-bottom: 1rem;
+  border: 1px solid #f1f5f9;
+}
+
+.qb-order-icon {
+  width: 44px;
+  height: 44px;
+  background: white;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.2rem;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+.qb-mini-order .info {
+  flex: 1;
+}
+
+.qb-mini-order .info strong {
+  display: block;
+  font-size: 1rem;
+}
+
+.qb-mini-order .info span {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+}
+
+.qb-order-status-pill {
+  padding: 0.25rem 0.75rem;
+  border-radius: 8px;
+  font-size: 0.75rem;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+.qb-order-status-pill.delivered { background: #dcfce7; color: #15803d; }
+.qb-order-status-pill.transit { background: #fffbeb; color: #b45309; }
+
+@media (max-width: 1024px) {
+  .qb-profile-grid { grid-template-columns: 1fr; }
+  .qb-profile-side { order: 2; }
+  .qb-profile-main { order: 1; }
+}

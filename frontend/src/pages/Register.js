@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import axios from "axios";
 import { useNavigate, Link } from "react-router-dom";
+import "./AuthRedesign.css";
 
 const API_BASE_URL =
   process.env.REACT_APP_API_BASE_URL ||
@@ -70,139 +71,141 @@ function Register() {
   };
 
   return (
-    <div className="qb-auth-page">
-      <div className="qb-auth-orb left" />
-      <div className="qb-auth-orb right" />
+    <div className="qb-auth-page fade-in">
+      {/* Left Hero Side */}
+      <div className="qb-auth-hero">
+        <img 
+          src="https://images.unsplash.com/photo-1543352634-a1c51d9f1fa7?q=80&w=2070&auto=format&fit=crop" 
+          className="qb-auth-hero-img"
+          alt="Fresh Groceries" 
+        />
+        <div className="qb-auth-hero-card">
+          <div className="icon-box">🥗</div>
+          <h1>Join QuickBazaar</h1>
+          <p>
+            Start your journey with local artisans today. 
+            Get fresh, hand-crafted essentials delivered to your door.
+          </p>
+        </div>
+      </div>
 
-      <div className="qb-auth-shell">
-        <header className="qb-auth-brand">
-          <span className="qb-auth-brand-mark">QB</span>
-          <div>
-            <strong>QuickBazaar</strong>
-            <p>Join our community of artisanal quality.</p>
-          </div>
-        </header>
+      {/* Right Form Side */}
+      <div className="qb-auth-form-side" style={{ overflowY: 'auto' }}>
+        <div className="qb-auth-form-shell">
+          <Link to="/" className="qb-auth-back-link">← Back to Home</Link>
+          <h2>Create Account</h2>
+          <p>Join our community of artisanal quality.</p>
 
-        <section className="qb-auth-card">
-          <h1>Create Account</h1>
-          <p>Please fill in your details to get started.</p>
-
-          <div className="qb-auth-role-toggle" role="tablist" aria-label="Role">
-            <button type="button" className="active" aria-selected="true">
+          <div className="qb-auth-toggle">
+            <button type="button" className="active">
               Customer
             </button>
-            <button
-              type="button"
-              aria-selected="false"
-              onClick={() => navigate("/admin/register")}
-            >
-              Admin
+            <button type="button" onClick={() => navigate("/admin/register")}>
+              Merchant / Admin
             </button>
           </div>
 
-          {error && <div className="qb-auth-error">{error}</div>}
-          {success && <div className="qb-auth-success">{success}</div>}
+          {error && <div className="qb-auth-alert error">{error}</div>}
+          {success && <div className="qb-auth-alert success">{success}</div>}
 
           <form onSubmit={handleRegister} className="qb-auth-form">
-            <label htmlFor="register-name">Full Name</label>
-            <input
-              id="register-name"
-              type="text"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-              placeholder="John Doe"
-              required
-              disabled={loading}
-            />
-
-            <label htmlFor="register-email">Email Address</label>
-            <input
-              id="register-email"
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              placeholder="john@example.com"
-              required
-              disabled={loading}
-            />
-
-            <label htmlFor="register-phone">Phone Number</label>
-            <input
-              id="register-phone"
-              type="tel"
-              value={phone}
-              onChange={(e) => setPhone(e.target.value)}
-              placeholder="+1 (555) 000-0000"
-              disabled={loading}
-            />
-
-            <div className="qb-auth-password-grid">
-              <div>
-                <label htmlFor="register-password">Password</label>
+            <div className="qb-auth-group">
+              <label>Full Name</label>
+              <div className="qb-auth-input-wrapper">
+                <span className="input-icon">👤</span>
                 <input
-                  id="register-password"
-                  type="password"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  placeholder="••••••••"
-                  required
-                  disabled={loading}
-                  minLength={6}
-                />
-              </div>
-              <div>
-                <label htmlFor="register-confirm-password">Confirm</label>
-                <input
-                  id="register-confirm-password"
-                  type="password"
-                  value={confirmPassword}
-                  onChange={(e) => setConfirmPassword(e.target.value)}
-                  placeholder="••••••••"
+                  type="text"
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                  placeholder="Rahul Sharma"
                   required
                   disabled={loading}
                 />
               </div>
             </div>
 
-            <div className="qb-auth-info-note">
-              Admins will be verified by the marketplace team before gaining full
-              access to dashboard features.
+            <div className="qb-auth-grid">
+              <div className="qb-auth-group">
+                <label>Email Address</label>
+                <div className="qb-auth-input-wrapper">
+                  <span className="input-icon">✉</span>
+                  <input
+                    type="email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    placeholder="rahul@example.com"
+                    required
+                    disabled={loading}
+                  />
+                </div>
+              </div>
+              <div className="qb-auth-group">
+                <label>Phone Number</label>
+                <div className="qb-auth-input-wrapper">
+                  <span className="input-icon">📞</span>
+                  <input
+                    type="tel"
+                    value={phone}
+                    onChange={(e) => setPhone(e.target.value)}
+                    placeholder="+91 98765 43210"
+                    disabled={loading}
+                  />
+                </div>
+              </div>
             </div>
 
-            <label className="qb-auth-checkbox" htmlFor="agree-terms">
+            <div className="qb-auth-grid">
+              <div className="qb-auth-group">
+                <label>Password</label>
+                <div className="qb-auth-input-wrapper">
+                  <span className="input-icon">🔒</span>
+                  <input
+                    type="password"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    placeholder="••••••••"
+                    required
+                    disabled={loading}
+                    minLength={6}
+                  />
+                </div>
+              </div>
+              <div className="qb-auth-group">
+                <label>Confirm Password</label>
+                <div className="qb-auth-input-wrapper">
+                  <span className="input-icon">🔒</span>
+                  <input
+                    type="password"
+                    value={confirmPassword}
+                    onChange={(e) => setConfirmPassword(e.target.value)}
+                    placeholder="••••••••"
+                    required
+                    disabled={loading}
+                  />
+                </div>
+              </div>
+            </div>
+
+            <div className="qb-auth-checkbox-row">
               <input
                 id="agree-terms"
                 type="checkbox"
                 checked={acceptedTerms}
                 onChange={(e) => setAcceptedTerms(e.target.checked)}
               />
-              <span>
-                I agree to the <a href="#0">Terms of Service</a> and
-                <a href="#0"> Privacy Policy</a>
+              <span htmlFor="agree-terms">
+                I agree to the <a href="#0" style={{ color: 'var(--qb-purple)', textDecoration: 'none' }}>Terms of Service</a> and <a href="#0" style={{ color: 'var(--qb-purple)', textDecoration: 'none' }}>Privacy Policy</a>.
               </span>
-            </label>
+            </div>
 
-            <button type="submit" className="qb-auth-submit" disabled={loading}>
-              {loading ? "Creating account..." : "Create Account"}
+            <button type="submit" className="qb-auth-submit-btn" disabled={loading}>
+              {loading ? "Creating account..." : "Create Account →"}
             </button>
           </form>
 
-          <p className="qb-auth-switch">
-            Already have an account? <Link to="/login">Login</Link>
-          </p>
-        </section>
-
-        <div className="qb-auth-bottom-links">
-          <button type="button">Privacy Policy</button>
-          <button type="button">Terms of Service</button>
-          <button type="button">Contact Support</button>
-        </div>
-        <p className="qb-auth-copyright">
-          © 2024 QuickBazaar. Artisanal Quality Guaranteed.
-        </p>
-
-        <div className="qb-auth-store-link">
-          <Link to="/">Back to Store</Link>
+          <div className="qb-auth-switch-row">
+            Already have an account? <Link to="/login">Sign In</Link>
+          </div>
         </div>
       </div>
     </div>

@@ -9,6 +9,7 @@ import Login from "./pages/Login";
 import Register from "./pages/Register";
 import Categories from "./pages/Categories";
 import Profile from "./pages/Profile";
+import Offers from "./pages/Offers";
 import AdminLogin from "./pages/AdminLogin";
 import AdminRegister from "./pages/AdminRegister";
 import AdminDashboard from "./pages/AdminDashboard";
@@ -17,9 +18,11 @@ import AdminAddProduct from "./pages/AdminAddProduct";
 import AdminOrders from "./pages/AdminOrders";
 import AdminCategories from "./pages/AdminCategories";
 import AdminShops from "./pages/AdminShops";
+import AdminSupport from "./pages/AdminSupport";
 import Navbar from "./Navbar";
 import { CartProvider } from "./context/CartContext";
 import SupportChatWidget from "./components/SupportChatWidget";
+import Footer from "./components/Footer";
 import "./App.css";
 
 function App() {
@@ -27,6 +30,7 @@ function App() {
     <div>
       <Navbar />
       {children}
+      <Footer />
       <SupportChatWidget />
     </div>
   );
@@ -50,6 +54,7 @@ function App() {
           <Route path="/admin/orders" element={<AdminOrders />} />
           <Route path="/admin/categories" element={<AdminCategories />} />
           <Route path="/admin/shops" element={<AdminShops />} />
+          <Route path="/admin/support" element={<AdminSupport />} />
 
           {/* Regular Routes (with navbar) */}
           <Route
@@ -105,6 +110,14 @@ function App() {
             element={
               <UserLayout>
                 <Categories />
+              </UserLayout>
+            }
+          />
+          <Route
+            path="/offers"
+            element={
+              <UserLayout>
+                <Offers />
               </UserLayout>
             }
           />

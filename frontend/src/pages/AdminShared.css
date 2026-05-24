@@ -1,0 +1,448 @@
+/* AdminShared.css - Global Styles for Premium Admin Portal */
+
+:root {
+  --admin-sidebar-width: 280px;
+  --admin-primary: #4f46e5;
+  --admin-primary-hover: #4338ca;
+  --admin-bg: #f8fafc;
+  --admin-card-bg: #ffffff;
+  --admin-text-main: #1e293b;
+  --admin-text-muted: #64748b;
+  --admin-border: #e2e8f0;
+  --admin-radius: 16px;
+  --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.qb-admin-modern, .qb-admin-shell {
+  display: flex;
+  min-height: 100vh;
+  background-color: var(--admin-bg);
+  color: var(--admin-text-main);
+  font-family: 'Inter', system-ui, sans-serif;
+}
+
+/* Sidebar Styling */
+.qb-admin-sidebar, .qb-admin-left-rail {
+  width: var(--admin-sidebar-width);
+  background: white;
+  border-right: 1px solid var(--admin-border);
+  display: flex;
+  flex-direction: column;
+  padding: 2.5rem 1.5rem;
+  position: fixed;
+  height: 100vh;
+  z-index: 100;
+}
+
+.qb-admin-brand-block, .qb-admin-left-brand {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 3.5rem;
+  padding: 0 0.5rem;
+}
+
+.qb-admin-brand-block .logo-icon, .qb-admin-left-brand h2::before {
+  content: 'QB';
+  width: 40px;
+  height: 40px;
+  background: linear-gradient(135deg, #6366f1 0%, #a855f7 100%);
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-weight: 800;
+  font-size: 1.2rem;
+}
+
+.qb-admin-left-brand h2 {
+  font-size: 1.25rem;
+  font-weight: 800;
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.qb-admin-left-brand p {
+  font-size: 0.8rem;
+  color: var(--admin-text-muted);
+  margin: 0;
+  padding-left: 3.25rem;
+}
+
+.qb-admin-menu, .qb-admin-left-nav {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.qb-admin-menu button, .qb-admin-left-nav button {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.85rem 1rem;
+  border: none;
+  background: transparent;
+  color: var(--admin-text-muted);
+  font-weight: 600;
+  font-size: 0.95rem;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: var(--transition);
+  text-align: left;
+}
+
+.qb-admin-menu button.active, .qb-admin-left-nav button.active {
+  background: #f1f5ff;
+  color: var(--admin-primary);
+}
+
+.qb-admin-sidebar-bottom, .qb-admin-left-bottom {
+  border-top: 1px solid var(--admin-border);
+  padding-top: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+/* Main Content Area */
+.qb-admin-main, .qb-admin-content {
+  margin-left: var(--admin-sidebar-width);
+  flex: 1;
+  padding: 2.5rem 3.5rem;
+}
+
+.qb-admin-topbar, .qb-admin-content-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 3rem;
+}
+
+.qb-admin-topbar h1, .qb-admin-content-header h1 {
+  font-size: 2.25rem;
+  font-weight: 800;
+  margin: 0;
+  letter-spacing: -1px;
+}
+
+.qb-admin-topbar p, .qb-admin-content-header p {
+  color: var(--admin-text-muted);
+  margin-top: 0.25rem;
+  font-weight: 500;
+}
+
+/* Toolbar actions for Products/Orders */
+.qb-admin-toolbar-row {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 2rem;
+  gap: 1rem;
+}
+
+.qb-admin-toolbar-search input {
+  width: 320px;
+  padding: 0.85rem 1.25rem;
+  border-radius: 12px;
+  border: 1px solid var(--admin-border);
+  outline: none;
+  font-size: 0.95rem;
+  transition: var(--transition);
+}
+
+.qb-admin-toolbar-search input:focus {
+  border-color: var(--admin-primary);
+  box-shadow: 0 0 0 4px rgba(79, 70, 229, 0.1);
+}
+
+.qb-admin-toolbar-actions {
+  display: flex;
+  gap: 1rem;
+}
+
+.qb-admin-toolbar-actions select {
+  padding: 0.85rem 1rem;
+  border-radius: 12px;
+  border: 1px solid var(--admin-border);
+  background: white;
+  font-weight: 600;
+  color: var(--admin-text-main);
+  cursor: pointer;
+}
+
+/* Tables */
+.qb-inventory-table-card, .qb-admin-card {
+  background: white;
+  border-radius: 24px;
+  padding: 1.5rem;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.03);
+  overflow: hidden;
+}
+
+.qb-inventory-table, .qb-admin-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.qb-inventory-table th, .qb-admin-table th {
+  text-align: left;
+  padding: 1.25rem 1rem;
+  font-size: 0.85rem;
+  color: var(--admin-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  border-bottom: 1px solid var(--admin-border);
+  font-weight: 800;
+}
+
+.qb-inventory-table td, .qb-admin-table td {
+  padding: 1.5rem 1rem;
+  border-bottom: 1px solid #f8fafc;
+  vertical-align: middle;
+}
+
+/* Product Cell */
+.qb-product-cell {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.qb-product-cell img {
+  width: 56px;
+  height: 56px;
+  border-radius: 12px;
+  object-fit: cover;
+  background: #f1f5f9;
+}
+
+.qb-product-cell div strong {
+  display: block;
+  font-size: 1rem;
+  color: var(--admin-text-main);
+}
+
+.qb-product-cell div small {
+  color: var(--admin-text-muted);
+  font-weight: 600;
+}
+
+/* Pills & Badges */
+.qb-category-pill {
+  padding: 0.4rem 0.85rem;
+  border-radius: 8px;
+  font-size: 0.8rem;
+  font-weight: 700;
+  background: #f1f5f9;
+  color: #475569;
+}
+
+.qb-stock-state {
+  font-weight: 700;
+  font-size: 0.9rem;
+}
+
+.qb-stock-state.ok { color: #10b981; }
+.qb-stock-state.low { color: #f59e0b; padding: 0.25rem 0.5rem; background: #fffbeb; border-radius: 6px; }
+
+.status-badge {
+  padding: 0.4rem 0.85rem;
+  border-radius: 8px;
+  font-size: 0.8rem;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+.status-badge.pending { background: #fff7ed; color: #c2410c; }
+.status-badge.shipped { background: #eff6ff; color: #1d4ed8; }
+.status-badge.delivered { background: #f0fdf4; color: #15803d; }
+.status-badge.cancelled { background: #fef2f2; color: #dc2626; }
+
+/* Buttons */
+.qb-admin-content-header button, .qb-admin-btn-add {
+  background: var(--admin-primary);
+  color: white;
+  border: none;
+  padding: 0.85rem 1.5rem;
+  border-radius: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: var(--transition);
+  box-shadow: 0 4px 12px rgba(79, 70, 229, 0.2);
+}
+
+.qb-admin-content-header button:hover, .qb-admin-btn-add:hover {
+  background: var(--admin-primary-hover);
+  transform: translateY(-2px);
+}
+
+.qb-row-actions button {
+  background: #f8fafc;
+  border: 1px solid var(--admin-border);
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  font-weight: 700;
+  cursor: pointer;
+  margin-right: 0.5rem;
+  transition: var(--transition);
+}
+
+.qb-row-actions button:hover {
+  background: white;
+  border-color: var(--admin-primary);
+  color: var(--admin-primary);
+}
+
+/* Metrics Section */
+.qb-inventory-metrics, .qb-admin-stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 1.5rem;
+  margin-top: 2.5rem;
+}
+
+.qb-inventory-metrics article, .qb-admin-stat-card {
+  background: white;
+  padding: 2rem;
+  border-radius: 24px;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+}
+
+.qb-inventory-metrics article h4 {
+  font-size: 0.9rem;
+  color: var(--admin-text-muted);
+  margin-bottom: 0.75rem;
+  font-weight: 700;
+}
+
+.qb-inventory-metrics article strong {
+  font-size: 2rem;
+  font-weight: 800;
+  display: block;
+  margin-bottom: 0.5rem;
+}
+
+.qb-inventory-metrics article p {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #10b981;
+}
+
+/* Order Management Specific */
+.qb-orders-layout {
+  display: grid;
+  grid-template-columns: 1fr 1.2fr;
+  gap: 2rem;
+  height: calc(100vh - 200px);
+}
+
+.qb-orders-list-area {
+  background: white;
+  border-radius: 24px;
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);
+  overflow: hidden;
+}
+
+.qb-order-cards-list {
+  flex: 1;
+  overflow-y: auto;
+  padding-right: 0.5rem;
+  margin-top: 1.5rem;
+}
+
+.qb-order-list-card {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1.25rem;
+  border-radius: 16px;
+  margin-bottom: 0.75rem;
+  cursor: pointer;
+  transition: var(--transition);
+  border: 1px solid transparent;
+}
+
+.qb-order-list-card:hover {
+  background: #f8fafc;
+}
+
+.qb-order-list-card.active {
+  background: #f1f5ff;
+  border-color: #dee7ff;
+}
+
+.qb-order-list-card .avatar {
+  width: 48px;
+  height: 48px;
+  background: #e2e8f0;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 800;
+  color: #64748b;
+}
+
+.qb-order-list-card .content h4 {
+  margin: 0;
+  font-size: 0.95rem;
+  font-weight: 800;
+}
+
+.qb-order-list-card .content p {
+  margin: 0.25rem 0;
+  font-size: 0.85rem;
+  color: var(--admin-text-muted);
+  font-weight: 600;
+}
+
+.qb-order-detail-pane {
+  background: white;
+  border-radius: 24px;
+  padding: 2.5rem;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.04);
+  overflow-y: auto;
+}
+
+.qb-order-detail-header h3 {
+  font-size: 1.75rem;
+  font-weight: 800;
+  margin: 0.5rem 0;
+}
+
+.qb-order-detail-body h4 {
+  margin: 2.5rem 0 1.25rem;
+  font-size: 1.1rem;
+  font-weight: 800;
+  border-bottom: 1px solid var(--admin-border);
+  padding-bottom: 0.75rem;
+}
+
+.item-row {
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+  margin-bottom: 1.25rem;
+}
+
+.item-row img {
+  width: 64px;
+  height: 64px;
+  border-radius: 12px;
+  object-fit: cover;
+}
+
+.total-row {
+  margin-top: 2rem;
+  padding-top: 1.5rem;
+  border-top: 2px solid var(--admin-bg);
+  display: flex;
+  justify-content: space-between;
+  font-size: 1.25rem;
+}

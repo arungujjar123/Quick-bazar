@@ -1,6 +1,7 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import "./AdminShared.css";
 
 const API_BASE_URL =
   process.env.REACT_APP_API_BASE_URL ||
@@ -66,7 +67,6 @@ function AdminOrders() {
         },
       );
 
-      // Update local state
       setOrders(
         orders.map((order) =>
           order._id === orderId ? { ...order, order_status: newStatus } : order,
@@ -101,11 +101,11 @@ function AdminOrders() {
     const date = new Date(dateString).getTime();
     const diffMinutes = Math.max(1, Math.floor((now - date) / (1000 * 60)));
 
-    if (diffMinutes < 60) return `${diffMinutes} mins ago`;
+    if (diffMinutes < 60) return `${diffMinutes}m ago`;
     const hours = Math.floor(diffMinutes / 60);
-    if (hours < 24) return `${hours} hours ago`;
+    if (hours < 24) return `${hours}h ago`;
     const days = Math.floor(hours / 24);
-    return `${days} days ago`;
+    return `${days}d ago`;
   };
 
   const filteredOrders = useMemo(() => {
@@ -122,127 +122,104 @@ function AdminOrders() {
   const selectedOrder =
     orders.find((order) => order._id === selectedOrderId) || filteredOrders[0] || null;
 
-  const todayNewCount = orders.filter((order) => {
-    if (!order.createdAt) return false;
-    const created = new Date(order.createdAt);
-    const now = new Date();
-    return created.toDateString() === now.toDateString();
-  }).length;
-
-  const statusClass = (status) => {
-    const normalized = (status || "pending").toLowerCase();
-    if (["processing", "shipped", "delivered", "cancelled", "pending"].includes(normalized)) {
-      return normalized;
-    }
-    return "pending";
-  };
-
   if (loading) {
     return (
-      <div className="container">
-        <div className="loading">Loading orders...</div>
+      <div className="qb-admin-shell">
+        <div className="loading" style={{ margin: 'auto' }}>Loading Order Stream...</div>
       </div>
     );
   }
 
   return (
-    <div className="qb-admin-shell">
-      <aside className="qb-admin-left-rail">
-        <div className="qb-admin-left-brand">
-          <h2>Bazaar Admin</h2>
-          <p>Management Portal</p>
+    <div className="qb-admin-shell fade-in">
+      {/* Sidebar */}
+      <aside className="qb-admin-sidebar">
+        <div className="qb-admin-brand-block">
+          <div className="logo-icon">QB</div>
+          <div>
+            <h2>QuickBazaar</h2>
+            <p>Admin Portal</p>
+          </div>
         </div>
-
-        <nav className="qb-admin-left-nav">
-          <button type="button" onClick={() => navigate("/admin/dashboard")}>Dashboard</button>
-          <button type="button" onClick={() => navigate("/admin/products")}>Products</button>
-          <button type="button" className="active" onClick={() => navigate("/admin/orders")}>Orders</button>
-          <button type="button" onClick={() => navigate("/admin/categories")}>Categories</button>
-          <button type="button" onClick={() => navigate("/admin/shops")}>Settings</button>
-          <button type="button">Support</button>
+        <button className="qb-admin-btn-add" onClick={() => navigate("/admin/add-product")}>
+          + Create Listing
+        </button>
+        <nav className="qb-admin-menu">
+          <button onClick={() => navigate("/admin/dashboard")}>📊 Dashboard</button>
+          <button onClick={() => navigate("/admin/products")}>📦 Inventory</button>
+          <button className="active" onClick={() => navigate("/admin/orders")}>🧾 Orders</button>
+          <button onClick={() => navigate("/admin/support")}>🤖 AI Agent</button>
+          <button onClick={() => navigate("/admin/customers")}>👥 Customers</button>
+          <button onClick={() => navigate("/admin/categories")}>📁 Categories</button>
+          <button onClick={() => navigate("/admin/settings")}>⚙️ Settings</button>
         </nav>
-
-        <div className="qb-admin-left-bottom with-secondary">
-          <button type="button" onClick={() => navigate("/")}>View Shop</button>
-          <button type="button" onClick={handleLogout}>Logout</button>
+        <div className="qb-admin-sidebar-bottom">
+          <button onClick={() => navigate("/")}>🏠 View Store</button>
+          <button onClick={handleLogout}>🚪 Logout</button>
         </div>
       </aside>
 
-      <main className="qb-admin-content orders">
-        <header className="qb-admin-content-header">
+      {/* Main Content */}
+      <main className="qb-admin-main">
+        <header className="qb-admin-topbar">
           <div>
             <h1>Order Management</h1>
             <p>Review and fulfill your customer requests.</p>
           </div>
-          <div className="qb-admin-order-searchbar">
+          <div className="qb-admin-toolbar-search">
             <input
               value={searchTerm}
-              onChange={(event) => setSearchTerm(event.target.value)}
-              placeholder="Search Order ID..."
+              onChange={(e) => setSearchTerm(e.target.value)}
+              placeholder="Search Order ID or Customer..."
             />
-            <button type="button">⛭</button>
           </div>
         </header>
 
         <section className="qb-orders-layout">
           <div className="qb-orders-list-area">
             <div className="qb-orders-list-header-row">
-              <h2>Recent Orders</h2>
-              <span>{todayNewCount} New Today</span>
+              <h3>Recent Orders</h3>
+              <span>{filteredOrders.length} Found</span>
             </div>
 
-            {filteredOrders.length === 0 ? (
-              <div className="empty-state">
-                <h3>No orders found</h3>
-                <p>Try searching with a different order id or customer.</p>
-              </div>
-            ) : (
-              <div className="qb-order-cards-list">
-                {filteredOrders.map((order) => {
-                  const status = (order.order_status || "pending").toLowerCase();
-                  const amount = Number(order.total_amount || order.total || 0).toFixed(2);
-                  const customer = order.user?.name || order.user?.email || "Unknown";
-                  const orderCode = `QB-${order._id.slice(-4).toUpperCase()}`;
+            <div className="qb-order-cards-list">
+              {filteredOrders.map((order) => {
+                const status = (order.order_status || "pending").toLowerCase();
+                const amount = Number(order.total_amount || order.total || 0).toFixed(2);
+                const customer = order.user?.name || order.user?.email || "Unknown";
+                const orderCode = `QB-${order._id.slice(-4).toUpperCase()}`;
 
-                  return (
-                    <article
-                      key={order._id}
-                      className={`qb-order-list-card ${selectedOrder?._id === order._id ? "active" : ""}`}
-                      onClick={() => setSelectedOrderId(order._id)}
-                    >
-                      <div className="avatar">{getInitials(customer)}</div>
-
-                      <div className="content">
-                        <h4>{orderCode} - {customer}</h4>
-                        <p>
-                          {order.items?.length || 0} item(s) · ${amount} · {formatElapsed(order.createdAt)}
-                        </p>
-                        <span className={`status ${statusClass(status)}`}>{status}</span>
-                      </div>
-
-                      <div className="meta">
-                        <small>
-                          {order.shipping_address ? "Express Delivery" : "Standard Post"}
-                        </small>
-                      </div>
-                    </article>
-                  );
-                })}
-              </div>
-            )}
+                return (
+                  <article
+                    key={order._id}
+                    className={`qb-order-list-card ${selectedOrder?._id === order._id ? "active" : ""}`}
+                    onClick={() => setSelectedOrderId(order._id)}
+                  >
+                    <div className="avatar">{getInitials(customer)}</div>
+                    <div className="content">
+                      <h4>{orderCode} - {customer}</h4>
+                      <p>₹{amount} · {formatElapsed(order.createdAt)}</p>
+                      <span className={`status-badge ${status}`}>{status}</span>
+                    </div>
+                  </article>
+                );
+              })}
+            </div>
           </div>
 
           <aside className="qb-order-detail-pane">
             {!selectedOrder ? (
-              <div className="empty-state">
-                <p>Select an order to view details.</p>
+              <div className="empty-state" style={{ textAlign: 'center', marginTop: '4rem' }}>
+                <p>Select an order to view full details.</p>
               </div>
             ) : (
               <>
                 <div className="qb-order-detail-header">
-                  <small>Active Order Details</small>
+                  <small>ORDER LOG</small>
                   <h3>Order #QB-{selectedOrder._id.slice(-4).toUpperCase()}</h3>
-                  <p>Status: {selectedOrder.order_status || "pending"}</p>
+                  <span className={`status-badge ${selectedOrder.order_status?.toLowerCase()}`}>
+                    {selectedOrder.order_status || "Pending"}
+                  </span>
                 </div>
 
                 <div className="qb-order-detail-body">
@@ -252,56 +229,47 @@ function AdminOrders() {
                       .filter((item) => item.product)
                       .map((item, index) => (
                         <div key={item.product?._id || index} className="item-row">
-                          <img
-                            src={item.product?.imageUrl || item.product?.image}
-                            alt={item.product?.name || "Product"}
-                            onError={(event) => {
-                              event.currentTarget.style.display = "none";
-                            }}
-                          />
-                          <div>
+                          <img src={item.product?.imageUrl || item.product?.image} alt="Product" />
+                          <div style={{ flex: 1 }}>
                             <strong>{item.product?.name || "Product"}</strong>
                             <p>Qty: {item.quantity}</p>
                           </div>
-                          <span>${Number((item.product?.price || 0) * item.quantity).toFixed(2)}</span>
+                          <strong>₹{Number((item.product?.price || 0) * item.quantity).toFixed(2)}</strong>
                         </div>
                       ))}
                   </div>
 
                   <div className="total-row">
                     <strong>Total Amount</strong>
-                    <strong>${Number(selectedOrder.total_amount || selectedOrder.total || 0).toFixed(2)}</strong>
+                    <strong style={{ color: 'var(--admin-primary)' }}>
+                      ₹{Number(selectedOrder.total_amount || selectedOrder.total || 0).toFixed(2)}
+                    </strong>
                   </div>
 
-                  <h4>Update Status</h4>
-                  <button
-                    type="button"
-                    className="primary"
-                    disabled={updatingOrder === selectedOrder._id}
-                    onClick={() => updateOrderStatus(selectedOrder._id, "shipped")}
-                  >
-                    {updatingOrder === selectedOrder._id ? "Updating..." : "Mark as Shipped"}
-                  </button>
-
-                  <div className="inline-actions">
-                    <button type="button">Label</button>
-                    <button type="button">Notify</button>
+                  <h4>Actions</h4>
+                  <div style={{ display: 'flex', gap: '1rem' }}>
+                    <button
+                      className="qb-admin-btn-add"
+                      style={{ flex: 1 }}
+                      disabled={updatingOrder === selectedOrder._id}
+                      onClick={() => updateOrderStatus(selectedOrder._id, "shipped")}
+                    >
+                      Mark as Shipped
+                    </button>
+                    <button
+                      className="qb-admin-btn-add"
+                      style={{ flex: 1, background: '#ef4444' }}
+                      disabled={updatingOrder === selectedOrder._id}
+                      onClick={() => updateOrderStatus(selectedOrder._id, "cancelled")}
+                    >
+                      Cancel
+                    </button>
                   </div>
 
-                  <button
-                    type="button"
-                    className="danger-outline"
-                    disabled={updatingOrder === selectedOrder._id}
-                    onClick={() => updateOrderStatus(selectedOrder._id, "cancelled")}
-                  >
-                    Cancel Order
-                  </button>
-
-                  <div className="internal-note">
-                    <strong>Internal Note</strong>
-                    <p>
-                      Customer requested eco-friendly packaging for this order.
-                      Ensure no plastic wrap is used during fulfillment.
+                  <div className="internal-note" style={{ marginTop: '2rem', background: '#f8fafc', padding: '1.5rem', borderRadius: '16px' }}>
+                    <strong>Merchant Note</strong>
+                    <p style={{ margin: '0.5rem 0 0', color: 'var(--admin-text-muted)', fontSize: '0.9rem' }}>
+                      Verified address. Standard packaging requested.
                     </p>
                   </div>
                 </div>

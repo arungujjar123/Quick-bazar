@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import "./OrdersRedesign.css";
 
 const API_BASE_URL =
   process.env.REACT_APP_API_BASE_URL ||
@@ -60,9 +61,7 @@ function Orders() {
         },
       );
 
-      // Remove the deleted order from the state
       setOrders(orders.filter((order) => order._id !== orderId));
-      alert("Order deleted successfully!");
     } catch (err) {
       console.error("Error deleting order:", err);
       alert("Failed to delete order. Please try again.");
@@ -83,110 +82,91 @@ function Orders() {
 
   if (loading) {
     return (
-      <div className="container">
+      <div className="qb-orders-page">
         <div className="loading">Loading your orders...</div>
       </div>
     );
   }
 
   return (
-    <div className="container fade-in">
-      <h2 style={{ textAlign: "center", marginBottom: "2rem", color: "#333" }}>
-        Your Order History
-      </h2>
+    <div className="qb-orders-page fade-in">
+      <div className="qb-orders-shell">
+        <header className="qb-orders-header">
+          <h1>My Order History</h1>
+          <p>Tracking your artisanal journey through our local makers.</p>
+        </header>
 
-      {orders.length === 0 ? (
-        <div className="empty-state">
-          <h3>No orders yet</h3>
-          <p>When you make your first purchase, it will appear here!</p>
-          <button onClick={() => navigate("/")} className="btn btn-primary">
-            Start Shopping
+        {orders.length === 0 ? (
+          <div className="empty-state">
+            <h3>No orders yet</h3>
+            <p>When you make your first purchase, it will appear here!</p>
+            <button onClick={() => navigate("/")} className="btn-premium btn-premium-primary">
+              Start Shopping
+            </button>
+          </div>
+        ) : (
+          <div className="qb-orders-list">
+            {orders.map((order) => (
+              <div key={order._id} className="qb-order-card">
+                <div className="qb-order-card-header">
+                  <div>
+                    <div className="qb-order-id">
+                      Order #{order._id.slice(-6).toUpperCase()}
+                    </div>
+                    <div className="qb-order-date">
+                      {formatDate(order.createdAt)}
+                    </div>
+                  </div>
+                  <div className="qb-order-meta">
+                    <div className="qb-order-amount">
+                      ₹
+                      {(order.total_amount || order.total || 0).toFixed(2)}
+                    </div>
+                    <button
+                      onClick={() => handleDeleteOrder(order._id)}
+                      disabled={deletingOrderId === order._id}
+                      className="qb-order-delete-btn"
+                    >
+                      {deletingOrderId === order._id ? "Deleting..." : "Delete Order"}
+                    </button>
+                  </div>
+                </div>
+
+                <div>
+                  <h4 className="qb-order-items-title">Ordered Items</h4>
+                  <div className="qb-order-items-grid">
+                    {order.items
+                      .filter((item) => item.product)
+                      .map((item, index) => (
+                        <div key={item.product._id || index} className="qb-order-item-row">
+                          <div className="qb-order-item-info">
+                            <div className="qb-order-item-name">
+                              {item.product?.name || "Product no longer available"}
+                            </div>
+                            <div className="qb-order-item-qty">
+                              Quantity: {item.quantity}
+                            </div>
+                          </div>
+                          <div className="qb-order-item-price">
+                            ₹
+                            {item.product?.price
+                              ? (item.product.price * item.quantity).toFixed(2)
+                              : "N/A"}
+                          </div>
+                        </div>
+                      ))}
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+
+        <div className="qb-orders-footer">
+          <button onClick={() => navigate("/")} className="qb-btn-shopping">
+            Continue Shopping
           </button>
         </div>
-      ) : (
-        <div style={{ display: "flex", flexDirection: "column", gap: "2rem" }}>
-          {orders.map((order) => (
-            <div key={order._id} className="cart-container">
-              <div
-                style={{
-                  display: "flex",
-                  justifyContent: "space-between",
-                  alignItems: "center",
-                  marginBottom: "1rem",
-                  paddingBottom: "1rem",
-                  borderBottom: "1px solid #e0e0e0",
-                }}
-              >
-                <div>
-                  <h3 style={{ color: "#333", marginBottom: "0.5rem" }}>
-                    Order #{order._id.slice(-6).toUpperCase()}
-                  </h3>
-                  <p style={{ color: "#666", fontSize: "0.9rem" }}>
-                    {formatDate(order.createdAt)}
-                  </p>
-                </div>
-                <div
-                  style={{ display: "flex", alignItems: "center", gap: "1rem" }}
-                >
-                  <div
-                    style={{
-                      fontSize: "1.3rem",
-                      fontWeight: "bold",
-                      color: "var(--accent-3)",
-                    }}
-                  >
-                    $
-                    {order.total_amount
-                      ? order.total_amount.toFixed(2)
-                      : order.total.toFixed(2)}
-                  </div>
-                  <button
-                    onClick={() => handleDeleteOrder(order._id)}
-                    disabled={deletingOrderId === order._id}
-                    className="btn btn-danger"
-                    style={{
-                      fontSize: "0.9rem",
-                      padding: "0.5rem 1rem",
-                      opacity: deletingOrderId === order._id ? 0.6 : 1,
-                    }}
-                  >
-                    {deletingOrderId === order._id ? "Deleting..." : "Delete"}
-                  </button>
-                </div>
-              </div>
-
-              <div>
-                <h4 style={{ color: "#333", marginBottom: "1rem" }}>Items:</h4>
-                {order.items
-                  .filter((item) => item.product) // Filter out items with null products
-                  .map((item, index) => (
-                    <div key={item.product._id || index} className="cart-item">
-                      <div className="cart-item-info">
-                        <div className="cart-item-name">
-                          {item.product?.name || "Product no longer available"}
-                        </div>
-                        <div className="cart-item-quantity">
-                          Quantity: {item.quantity}
-                        </div>
-                      </div>
-                      <div className="cart-item-price">
-                        $
-                        {item.product?.price
-                          ? (item.product.price * item.quantity).toFixed(2)
-                          : "N/A"}
-                      </div>
-                    </div>
-                  ))}
-              </div>
-            </div>
-          ))}
-        </div>
-      )}
-
-      <div style={{ textAlign: "center", marginTop: "2rem" }}>
-        <button onClick={() => navigate("/")} className="btn btn-primary">
-          Continue Shopping
-        </button>
       </div>
     </div>
   );

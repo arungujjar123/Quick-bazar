@@ -1,0 +1,187 @@
+/* CheckoutRedesign.css */
+
+.qb-checkout-page {
+  padding: 4rem 0;
+  background: #f8fafc;
+  min-height: calc(100vh - 80px);
+}
+
+.qb-checkout-grid {
+  display: grid;
+  grid-template-columns: 1fr 400px;
+  gap: 3rem;
+  align-items: start;
+}
+
+.qb-checkout-steps {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.qb-checkout-card {
+  background: white;
+  border-radius: 24px;
+  padding: 2.5rem;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+}
+
+.qb-checkout-card h2 {
+  font-size: 1.5rem;
+  font-weight: 800;
+  margin-bottom: 2rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.qb-step-number {
+  width: 32px;
+  height: 32px;
+  background: var(--qb-purple);
+  color: white;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.9rem;
+  font-weight: 800;
+}
+
+/* Shipping Methods */
+.qb-shipping-options {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.25rem;
+}
+
+.qb-shipping-card {
+  border: 2px solid #f1f5f9;
+  border-radius: 16px;
+  padding: 1.5rem;
+  cursor: pointer;
+  transition: var(--transition);
+  position: relative;
+}
+
+.qb-shipping-card.active {
+  border-color: var(--qb-purple);
+  background: #f1f5ff;
+}
+
+.qb-shipping-card strong {
+  display: block;
+  font-size: 1rem;
+  margin-bottom: 0.25rem;
+}
+
+.qb-shipping-card p {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+}
+
+.qb-shipping-price {
+  position: absolute;
+  top: 1.5rem;
+  right: 1.5rem;
+  font-weight: 800;
+}
+
+/* Payment Form */
+.qb-payment-methods {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+.qb-method-btn {
+  flex: 1;
+  padding: 1rem;
+  border: 2px solid #f1f5f9;
+  border-radius: 12px;
+  background: white;
+  font-weight: 700;
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.qb-method-btn.active {
+  border-color: var(--qb-purple);
+  color: var(--qb-purple);
+}
+
+.qb-card-input-wrapper {
+  background: #f8fafc;
+  padding: 1.5rem;
+  border-radius: 16px;
+  border: 1px solid #e2e8f0;
+}
+
+/* Summary Card */
+.qb-order-preview {
+  background: white;
+  border-radius: 24px;
+  padding: 2.5rem;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.04);
+}
+
+.qb-preview-item {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 1.25rem;
+}
+
+.qb-preview-item img {
+  width: 60px;
+  height: 60px;
+  border-radius: 12px;
+  object-fit: cover;
+}
+
+.qb-preview-info strong {
+  display: block;
+  font-size: 0.95rem;
+}
+
+.qb-preview-info span {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+}
+
+.qb-total-badge {
+  background: var(--text-dark);
+  color: white;
+  padding: 1.5rem;
+  border-radius: 20px;
+  margin-top: 2rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.qb-total-badge span {
+  font-weight: 600;
+  opacity: 0.8;
+}
+
+.qb-total-badge strong {
+  font-size: 1.5rem;
+}
+
+.qb-btn-pay {
+  width: 100%;
+  padding: 1.25rem;
+  background: var(--grad-premium);
+  color: white;
+  border: none;
+  border-radius: 16px;
+  font-size: 1.1rem;
+  font-weight: 800;
+  cursor: pointer;
+  margin-top: 1.5rem;
+  box-shadow: 0 10px 20px rgba(99, 102, 241, 0.2);
+}
+
+@media (max-width: 968px) {
+  .qb-checkout-grid { grid-template-columns: 1fr; }
+}

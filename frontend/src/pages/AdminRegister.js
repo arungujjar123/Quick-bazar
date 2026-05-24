@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
+import "./AdminAuthRedesign.css";
 
 const API_BASE_URL =
   process.env.REACT_APP_API_BASE_URL ||
@@ -36,7 +37,6 @@ function AdminRegister() {
     setSuccess("");
     setLoading(true);
 
-    // Validation
     if (formData.password !== formData.confirmPassword) {
       setError("Passwords do not match");
       setLoading(false);
@@ -69,19 +69,10 @@ function AdminRegister() {
       );
 
       if (response.data.success) {
-        // Show success message
-        setSuccess(
-          "Admin account created successfully! Redirecting to dashboard..."
-        );
-
-        // Store the admin token
+        setSuccess("Account created successfully! Redirecting...");
         localStorage.setItem("adminToken", response.data.token);
         localStorage.setItem("adminInfo", JSON.stringify(response.data.admin));
-
-        // Redirect to admin dashboard after a short delay
-        setTimeout(() => {
-          navigate("/admin/dashboard");
-        }, 2000);
+        setTimeout(() => navigate("/admin/dashboard"), 2000);
       }
     } catch (error) {
       setError(error.response?.data?.message || "Registration failed");
@@ -91,166 +82,156 @@ function AdminRegister() {
   };
 
   return (
-    <div className="qb-admin-auth-page qb-admin-auth-register-page">
-      <header className="qb-admin-auth-topbar">
-        <Link to="/" className="qb-admin-auth-top-brand">
-          QuickBazaar
-        </Link>
-        <nav>
-          <Link to="/admin/login">Login</Link>
-          <Link to="/admin/register" className="active">
-            Register
-          </Link>
-        </nav>
-      </header>
+    <div className="qb-admin-auth-page fade-in">
+      {/* Left Hero Side */}
+      <div className="qb-admin-auth-hero">
+        <img 
+          src="https://images.unsplash.com/photo-1559056199-641a0ac8b55e?q=80&w=2070&auto=format&fit=crop" 
+          alt="Business Background" 
+        />
+        <div className="qb-admin-auth-hero-card">
+          <div className="icon">🚀</div>
+          <h1>QuickBazaar</h1>
+          <p>
+            Empower your local business. 
+            Join our curated marketplace designed for modern artisans.
+          </p>
+        </div>
+      </div>
 
-      <main className="qb-admin-auth-register-shell">
-        <aside className="qb-admin-auth-register-visual">
-          <div className="qb-admin-auth-register-overlay" />
-          <div className="qb-admin-auth-register-content">
-            <h2>Empower Your Business</h2>
-            <p>
-              Join our curated marketplace designed for the modern artisan and
-              forward-thinking retailer.
-            </p>
-            <ul>
-              <li>
-                <strong>Secure Verification</strong>
-                <span>Verified within 24 hours for business integrity.</span>
-              </li>
-              <li>
-                <strong>Advanced Analytics</strong>
-                <span>Track sales, inventory, and trends in real-time.</span>
-              </li>
-            </ul>
+      {/* Right Form Side */}
+      <div className="qb-admin-auth-form-side" style={{ overflowY: 'auto' }}>
+        <div className="qb-admin-auth-form-shell">
+          <h2>Create Merchant Account</h2>
+          <p>Start selling your artisanal products today.</p>
+
+          <div className="qb-admin-auth-toggle">
+            <button type="button" onClick={() => navigate("/register")}>
+              Customer
+            </button>
+            <button type="button" className="active">
+              Merchant / Admin
+            </button>
           </div>
-        </aside>
 
-        <section className="qb-admin-auth-register-formwrap">
-          <small>Merchant Registration</small>
-          <h1>Create Admin Account</h1>
-          <p>Complete your professional profile to start selling.</p>
-
-          {error && <div className="qb-admin-auth-alert error">{error}</div>}
-          {success && <div className="qb-admin-auth-alert success">{success}</div>}
+          {error && <div className="qb-admin-auth-error-box">{error}</div>}
+          {success && (
+            <div className="qb-admin-auth-error-box" style={{ background: '#f0fdf4', color: '#16a34a', borderColor: '#bbf7d0' }}>
+              {success}
+            </div>
+          )}
 
           <form onSubmit={handleSubmit} className="qb-admin-auth-form">
-            <div className="qb-admin-auth-grid-2">
-              <div>
-                <label htmlFor="admin-name">Full Name</label>
-                <input
-                  id="admin-name"
-                  type="text"
-                  name="name"
-                  value={formData.name}
-                  onChange={handleChange}
-                  required
-                  placeholder="Enter your full name"
-                />
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
+              <div className="qb-admin-auth-group">
+                <label>Full Name</label>
+                <div className="qb-admin-auth-input-wrapper">
+                  <span>👤</span>
+                  <input
+                    name="name"
+                    value={formData.name}
+                    onChange={handleChange}
+                    placeholder="Rahul Sharma"
+                    required
+                  />
+                </div>
               </div>
-              <div>
-                <label htmlFor="admin-shop-name">Shop Name</label>
+              <div className="qb-admin-auth-group">
+                <label>Shop Name</label>
+                <div className="qb-admin-auth-input-wrapper">
+                  <span>🏪</span>
+                  <input
+                    name="shopName"
+                    value={formData.shopName}
+                    onChange={handleChange}
+                    placeholder="Artisan Goods"
+                  />
+                </div>
+              </div>
+            </div>
+
+            <div className="qb-admin-auth-group">
+              <label>Business Email</label>
+              <div className="qb-admin-auth-input-wrapper">
+                <span>✉</span>
                 <input
-                  id="admin-shop-name"
-                  type="text"
-                  name="shopName"
-                  value={formData.shopName}
+                  type="email"
+                  name="email"
+                  value={formData.email}
                   onChange={handleChange}
-                  placeholder="e.g. Artisan Goods Co."
+                  placeholder="rahul@business.com"
+                  required
                 />
               </div>
             </div>
 
-            <label htmlFor="admin-email">Business Email</label>
-            <input
-              id="admin-email"
-              type="email"
-              name="email"
-              value={formData.email}
-              onChange={handleChange}
-              required
-              placeholder="name@business.com"
-            />
-
-            <div className="qb-admin-auth-grid-2">
-              <div>
-                <label htmlFor="admin-password">Password</label>
-                <input
-                  id="admin-password"
-                  type="password"
-                  name="password"
-                  value={formData.password}
-                  onChange={handleChange}
-                  required
-                  minLength={6}
-                  placeholder="********"
-                />
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
+              <div className="qb-admin-auth-group">
+                <label>Password</label>
+                <div className="qb-admin-auth-input-wrapper">
+                  <span>🔒</span>
+                  <input
+                    type="password"
+                    name="password"
+                    value={formData.password}
+                    onChange={handleChange}
+                    placeholder="••••••••"
+                    required
+                  />
+                </div>
               </div>
-              <div>
-                <label htmlFor="admin-confirm-password">Confirm Password</label>
+              <div className="qb-admin-auth-group">
+                <label>Confirm</label>
+                <div className="qb-admin-auth-input-wrapper">
+                  <span>🔒</span>
+                  <input
+                    type="password"
+                    name="confirmPassword"
+                    value={formData.confirmPassword}
+                    onChange={handleChange}
+                    placeholder="••••••••"
+                    required
+                  />
+                </div>
+              </div>
+            </div>
+
+            <div className="qb-admin-auth-group">
+              <label>Admin Secret Key</label>
+              <div className="qb-admin-auth-input-wrapper">
+                <span>🔑</span>
                 <input
-                  id="admin-confirm-password"
                   type="password"
-                  name="confirmPassword"
-                  value={formData.confirmPassword}
+                  name="secretKey"
+                  value={formData.secretKey}
                   onChange={handleChange}
+                  placeholder="Provided by platform"
                   required
-                  placeholder="********"
                 />
               </div>
             </div>
 
-            <label htmlFor="admin-secret-key">Admin Access Key</label>
-            <input
-              id="admin-secret-key"
-              type="password"
-              name="secretKey"
-              value={formData.secretKey}
-              onChange={handleChange}
-              required
-              placeholder="Platform-provided key"
-            />
-
-            <label className="qb-admin-auth-checkbox" htmlFor="admin-terms">
-              <input
-                id="admin-terms"
-                type="checkbox"
-                checked={agreeTerms}
-                onChange={(e) => setAgreeTerms(e.target.checked)}
+            <div style={{ display: 'flex', gap: '0.75rem', marginTop: '1rem' }}>
+              <input 
+                type="checkbox" 
+                checked={agreeTerms} 
+                onChange={(e) => setAgreeTerms(e.target.checked)} 
+                style={{ width: 20, height: 20 }}
               />
-              <span>
-                I agree to the <a href="#0">Merchant Terms of Service</a> and
-                acknowledge the privacy policy regarding business data handling.
+              <span style={{ fontSize: '0.85rem', color: '#64748b', fontWeight: 600 }}>
+                I agree to the <a href="#0" style={{ color: '#4f46e5', textDecoration: 'none' }}>Merchant Terms</a> and business data policy.
               </span>
-            </label>
-
-            <button type="submit" className="qb-admin-auth-submit" disabled={loading}>
-              {loading ? "Creating Account..." : "Create Admin Account"}
-            </button>
-
-            <div className="qb-admin-auth-info-note">
-              To ensure platform security, all new merchant accounts undergo a
-              mandatory verification process. Your account will be reviewed and
-              activated within 24 hours.
             </div>
 
-            <p className="qb-admin-auth-switch-row">
-              Already have an account? <Link to="/admin/login">Sign In</Link>
-            </p>
+            <button type="submit" className="qb-admin-auth-submit-btn" disabled={loading}>
+              {loading ? "Creating Account..." : "Create Account →"}
+            </button>
           </form>
-        </section>
-      </main>
 
-      <footer className="qb-admin-auth-register-footer">
-        <strong>QuickBazaar Admin Portal</strong>
-        <a href="#0">Support</a>
-        <a href="#0">Terms of Service</a>
-        <a href="#0">Privacy Policy</a>
-        <span>© 2024 QuickBazaar Admin Portal</span>
-      </footer>
-
-      <div className="qb-admin-auth-home-link">
-        <button type="button" onClick={() => navigate("/")}>Back to Store</button>
+          <div className="qb-admin-auth-switch-link">
+            Already have an account? <Link to="/admin/login">Sign In</Link>
+          </div>
+        </div>
       </div>
     </div>
   );

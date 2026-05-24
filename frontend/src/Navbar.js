@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
+import axios from "axios";
 import { useCart } from "./context/CartContext";
+import "./HomeRedesign.css";
 
 function Navbar() {
   const navigate = useNavigate();
@@ -8,11 +10,7 @@ function Navbar() {
   const { cartItemCount, clearCart } = useCart();
   const token = localStorage.getItem("token");
   const [userName, setUserName] = useState("");
-  const [savedLocation, setSavedLocation] = useState("San Francisco, CA");
-
-  const profileInitial = userName
-    ? userName.trim().charAt(0).toUpperCase()
-    : "U";
+  const [savedLocation, setSavedLocation] = useState("Mumbai, MH");
 
   useEffect(() => {
     const storedUser = localStorage.getItem("user");
@@ -27,11 +25,37 @@ function Navbar() {
       setUserName("");
     }
 
-    const city = localStorage.getItem("qb_location_city");
-    if (city) {
-      setSavedLocation(city);
-    }
+    const detectLocation = async () => {
+      const city = localStorage.getItem("qb_location_city");
+      if (city && city !== "San Jose, CA") {
+        setSavedLocation(city);
+      } else {
+        try {
+          // Auto-detect location via IP if not set
+          const res = await axios.get("https://ipapi.co/json/");
+          if (res.data && res.data.city) {
+            const loc = `${res.data.city}, ${res.data.region_code || res.data.country_code}`;
+            setSavedLocation(loc);
+            localStorage.setItem("qb_location_city", loc);
+          }
+        } catch (err) {
+          console.error("Location detection failed:", err);
+          // Fallback to Mumbai if detection fails
+          setSavedLocation("Mumbai, MH");
+        }
+      }
+    };
+
+    detectLocation();
   }, [token]);
+
+  const handleLocationChange = () => {
+    const newCity = window.prompt("Enter your city (e.g., Mumbai, MH):", savedLocation);
+    if (newCity && newCity !== savedLocation) {
+      setSavedLocation(newCity);
+      localStorage.setItem("qb_location_city", newCity);
+    }
+  };
 
   const handleLogout = () => {
     localStorage.removeItem("token");
@@ -40,92 +64,86 @@ function Navbar() {
     navigate("/login");
   };
 
-  const isHome = location.pathname === "/";
-  const query = new URLSearchParams(location.search);
-  const activeView = query.get("view") || "shop";
-
-  const isTabActive = (tab) => {
-    if (!isHome) return false;
-    if (tab === "shop") {
-      return activeView === "shop" || activeView === "";
-    }
-    return activeView === tab;
-  };
-
-  const isCategoriesPage = location.pathname === "/categories";
-
   return (
-    <nav className="qb-nav">
-      <div className="qb-nav-content">
-        <Link to="/" className="qb-nav-brand">
-          QuickBazaar
+    <nav className="qb-nav-redesign">
+      <Link to="/" className="qb-nav-brand-redesign">
+        QuickBazaar
+      </Link>
+
+      <div className="qb-nav-links-redesign">
+        <Link to="/categories">Categories</Link>
+        <Link to="/offers">Offers</Link>
+        <Link to="/orders">My Orders</Link>
+      </div>
+
+      <div className="qb-nav-search-redesign">
+        <i>🔍</i>
+        <input 
+          type="text" 
+          placeholder="Search products..." 
+          onKeyDown={(e) => {
+            if (e.key === 'Enter' && e.target.value.trim()) {
+              navigate(`/categories?q=${encodeURIComponent(e.target.value.trim())}`);
+            }
+          }}
+        />
+      </div>
+
+      <div className="qb-nav-actions-redesign">
+        <button 
+          className="qb-nav-icon-btn" 
+          title="Change Location"
+          onClick={handleLocationChange}
+        >
+          <span>📍</span>
+          <small style={{ fontSize: '0.75rem', fontWeight: 600 }}>{savedLocation}</small>
+        </button>
+
+        {token ? (
+          <Link to="/profile" className="qb-nav-icon-btn" title="Profile">
+            <span>👤</span>
+          </Link>
+        ) : (
+          <Link to="/login" className="qb-nav-icon-btn" title="Login">
+            <span>👤</span>
+          </Link>
+        )}
+
+        <button className="qb-nav-icon-btn" title="Notifications">
+          <span>🔔</span>
+        </button>
+
+        <Link to="/cart" className="qb-nav-cart-btn">
+          <span>🛒</span>
+          Cart
+          {cartItemCount > 0 && (
+            <span style={{ 
+              background: 'white', 
+              color: 'var(--qb-blue)', 
+              borderRadius: '50%', 
+              width: '20px', 
+              height: '20px', 
+              display: 'flex', 
+              alignItems: 'center', 
+              justifyContent: 'center',
+              fontSize: '0.7rem'
+            }}>
+              {cartItemCount}
+            </span>
+          )}
         </Link>
-
-        <div className="qb-nav-tabs">
-          <Link to="/" className={isTabActive("shop") ? "active" : ""}>
-            Shop
-          </Link>
-          <Link to="/categories" className={isCategoriesPage ? "active" : ""}>
-            Categories
-          </Link>
-          <Link
-            to="/?view=deals"
-            className={isTabActive("deals") ? "active" : ""}
-          >
-            Local Deals
-          </Link>
-          <Link
-            to="/?view=makers"
-            className={isTabActive("makers") ? "active" : ""}
-          >
-            Makers
-          </Link>
-        </div>
-
-        <div className="qb-nav-actions">
-          <span className="qb-location-pill">{savedLocation}</span>
-
-          <Link to="/cart" className="qb-icon-link" aria-label="Cart">
-            Cart
-            {cartItemCount > 0 && (
-              <span className="qb-cart-badge">{cartItemCount}</span>
-            )}
-          </Link>
-
-          {token ? (
-            <>
-              <Link
-                to="/orders"
-                className="qb-icon-link"
-                aria-label="Orders"
-              >
-                Orders
-              </Link>
-              <Link to="/profile" className="qb-profile-chip">
-                <span className="qb-profile-avatar">{profileInitial}</span>
-                <span>{userName || "Profile"}</span>
-              </Link>
-              <button onClick={handleLogout} className="qb-logout-btn">
-                Logout
-              </button>
-            </>
-          ) : (
-            <>
-              <Link to="/login" className="qb-auth-link">
-                Login
-              </Link>
-              <Link to="/register" className="qb-auth-link highlight">
-                Register
-              </Link>
-            </>
-          )}
-
-          {(!token || localStorage.getItem("adminToken")) && (
-            <Link to="/admin/login" className="qb-admin-link">
-              Admin
-            </Link>
-          )}
-        </div>
+        
+        {token && (
+          <button onClick={handleLogout} style={{ 
+            background: 'none', 
+            border: 'none', 
+            color: 'var(--qb-text-muted)', 
+            cursor: 'pointer',
+            fontSize: '0.8rem'
+          }}>
+            Logout
+          </button>
+        )}
       </div>
     </nav>
   );

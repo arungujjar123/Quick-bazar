@@ -1,6 +1,7 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import "./AdminShared.css";
 
 const API_BASE_URL =
   process.env.REACT_APP_API_BASE_URL ||
@@ -10,76 +11,38 @@ const API_BASE_URL =
 
 function AdminDashboard() {
   const [stats, setStats] = useState({
-    totalProducts: 0,
+    totalSales: 0,
     totalOrders: 0,
-    totalUsers: 0,
-    totalRevenue: 0,
-    pendingOrders: 0,
+    activeProducts: 0,
+    newCustomers: 0,
     recentOrders: [],
+    lowStockItems: [],
   });
   const [loading, setLoading] = useState(true);
-  const [searchTerm, setSearchTerm] = useState("");
   const navigate = useNavigate();
 
-  const adminInfo = (() => {
-    try {
-      return JSON.parse(localStorage.getItem("adminInfo") || "{}");
-    } catch {
-      return {};
-    }
-  })();
-
   useEffect(() => {
-    checkAdminAuth();
-    fetchDashboardStats();
-  }, []);
-
-  const checkAdminAuth = () => {
     const token = localStorage.getItem("adminToken");
     if (!token) {
       navigate("/admin/login");
       return;
     }
-  };
+    fetchDashboardStats();
+  }, [navigate]);
 
   const fetchDashboardStats = async () => {
     const token = localStorage.getItem("adminToken");
     try {
-      const response = await axios.get(
-        `${API_BASE_URL}/api/admin/dashboard`,
-        {
-          headers: { Authorization: `Bearer ${token}` },
-        },
-      );
-
-      // Safely extract stats and recentOrders from response
-      const { stats: responseStats, recentOrders } = response.data;
-
-      setStats({
-        totalProducts: responseStats?.totalProducts || 0,
-        totalOrders: responseStats?.totalOrders || 0,
-        totalUsers: responseStats?.totalUsers || 0,
-        totalRevenue: responseStats?.totalRevenue || 0,
-        pendingOrders: responseStats?.pendingOrders || 0,
-        recentOrders: recentOrders || [],
+      const response = await axios.get(`${API_BASE_URL}/api/admin/dashboard-stats`, {
+        headers: { Authorization: `Bearer ${token}` },
       });
-
+      setStats(response.data);
       setLoading(false);
     } catch (error) {
-      console.error("Error fetching dashboard stats:", error);
+      console.error("Error fetching stats:", error);
       if (error.response?.status === 401) {
         localStorage.removeItem("adminToken");
         navigate("/admin/login");
-      } else {
-        // Set default values on error to prevent crashes
-        setStats({
-          totalProducts: 0,
-          totalOrders: 0,
-          totalUsers: 0,
-          totalRevenue: 0,
-          pendingOrders: 0,
-          recentOrders: [],
-        });
       }
       setLoading(false);
     }
@@ -91,265 +54,222 @@ function AdminDashboard() {
     navigate("/admin/login");
   };
 
-  const getStatusClass = (status) => {
-    const normalized = (status || "pending").toLowerCase();
-    if (normalized === "delivered") return "delivered";
-    if (normalized === "processing") return "processing";
-    if (normalized === "shipped") return "shipped";
-    if (normalized === "cancelled") return "cancelled";
-    return "pending";
-  };
-
-  const getInitials = (name) => {
-    if (!name) return "US";
-    const words = name.trim().split(" ").filter(Boolean);
-    if (words.length === 1) return words[0].slice(0, 2).toUpperCase();
-    return `${words[0][0]}${words[1][0]}`.toUpperCase();
-  };
-
-  const filteredOrders = (stats.recentOrders || []).filter((order) => {
-    const orderCode = `QB-${(order._id || "").slice(-4).toUpperCase()}`;
-    const customer = order.user?.name || order.user?.email || "Unknown";
-    const query = searchTerm.trim().toLowerCase();
-    if (!query) return true;
-    return (
-      orderCode.toLowerCase().includes(query) ||
-      customer.toLowerCase().includes(query)
-    );
-  });
-
-  const totalSales = Number(stats.totalRevenue || 0);
-  const activeOrders = Number(stats.pendingOrders || 0);
-  const totalProducts = Number(stats.totalProducts || 0);
-  const newCustomers = Number(stats.totalUsers || 0);
-
-  const fulfillmentRate = Math.min(
-    98,
-    stats.totalOrders > 0
-      ? Math.round(((stats.totalOrders - activeOrders) / stats.totalOrders) * 100)
-      : 92,
-  );
-  const customerSatisfaction = Math.min(5, Math.max(4.2, 4.6 + activeOrders * 0.02));
-  const inventoryLevel = totalProducts > 100 ? "Good" : totalProducts > 40 ? "Medium" : "Low";
-
   if (loading) {
     return (
-      <div className="container">
-        <div className="loading">Loading dashboard...</div>
+      <div className="qb-admin-shell">
+        <div className="loading" style={{ margin: 'auto', fontSize: '1.2rem', fontWeight: 700 }}>
+          Synchronizing Portal Data...
+        </div>
       </div>
     );
   }
 
   return (
-    <div className="admin-dashboard qb-admin-modern">
+    <div className="qb-admin-shell fade-in">
+      {/* Sidebar */}
       <aside className="qb-admin-sidebar">
         <div className="qb-admin-brand-block">
-          <h2>Admin Portal</h2>
-          <p>Manage your marketplace</p>
+          <div className="logo-icon">QB</div>
+          <div>
+            <h2>QuickBazaar</h2>
+            <p>Admin Portal</p>
+          </div>
         </div>
 
+        <button className="qb-admin-btn-add" onClick={() => navigate("/admin/add-product")}>
+          + Create Listing
+        </button>
+
         <nav className="qb-admin-menu">
-          <button className="active" onClick={() => navigate("/admin/dashboard")}>Dashboard</button>
-          <button onClick={() => navigate("/admin/products")}>Products</button>
-          <button onClick={() => navigate("/admin/orders")}>Orders</button>
-          <button onClick={() => navigate("/admin/categories")}>Categories</button>
-          <button onClick={() => navigate("/admin/shops")}>Shop Settings</button>
+          <button className="active" onClick={() => navigate("/admin/dashboard")}>
+            <span>📊</span> Dashboard
+          </button>
+          <button onClick={() => navigate("/admin/products")}>
+            <span>📦</span> Inventory
+          </button>
+          <button onClick={() => navigate("/admin/orders")}>
+            <span>🧾</span> Orders
+          </button>
+          <button onClick={() => navigate("/admin/support")}>
+            <span>🤖</span> AI Agent
+          </button>
+          <button onClick={() => navigate("/admin/customers")}>
+            <span>👥</span> Customers
+          </button>
+          <button onClick={() => navigate("/admin/categories")}>
+            <span>📁</span> Categories
+          </button>
+          <button onClick={() => navigate("/admin/settings")}>
+            <span>⚙️</span> Settings
+          </button>
         </nav>
 
         <div className="qb-admin-sidebar-bottom">
-          <button>Support</button>
-          <button onClick={handleLogout}>Logout</button>
+          <button onClick={() => navigate("/")}>
+            <span>🏠</span> View Store
+          </button>
+          <button onClick={handleLogout}>
+            <span>🚪</span> Logout
+          </button>
         </div>
       </aside>
 
+      {/* Main Content */}
       <main className="qb-admin-main">
         <header className="qb-admin-topbar">
-          <h1>Dashboard</h1>
+          <div>
+            <h1>Dashboard Overview</h1>
+            <p>Welcome back! Here's what's happening today.</p>
+          </div>
           <div className="qb-admin-topbar-right">
-            <div className="qb-admin-order-search">
-              <input
-                value={searchTerm}
-                onChange={(event) => setSearchTerm(event.target.value)}
-                placeholder="Search orders..."
-              />
+            <div className="qb-admin-search-box">
+              <input type="text" placeholder="Quick search..." />
+              <i>🔍</i>
             </div>
-            <div className="qb-admin-user-chip">
-              <div>
-                <strong>{adminInfo.name || "Store Manager"}</strong>
-                <span>{adminInfo.email || "STORE MANAGER"}</span>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+              <div style={{ textAlign: 'right' }}>
+                <div style={{ fontWeight: 800, fontSize: '0.9rem' }}>Admin User</div>
+                <div style={{ fontSize: '0.75rem', color: 'var(--admin-text-muted)' }}>Super Admin</div>
               </div>
-              <div className="qb-admin-avatar">
-                {getInitials(adminInfo.name || "Manager")}
-              </div>
+              <img 
+                src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?q=80&w=100&auto=format&fit=crop" 
+                alt="Profile" 
+                style={{ width: 44, height: 44, borderRadius: '12px' }}
+              />
             </div>
           </div>
         </header>
 
-        <section className="qb-admin-actions-row">
-          <button className="orange" onClick={() => navigate("/admin/add-product")}>
-            Add Product
-          </button>
-          <button className="green" onClick={() => navigate("/admin/orders")}>
-            Manage Orders
-          </button>
-          <button className="neutral" onClick={() => navigate("/")}>
-            View Shop
-          </button>
-        </section>
-
+        {/* Stats Grid */}
         <section className="qb-admin-stats-grid">
-          <article className="qb-admin-stat-box">
-            <h4>Total Sales</h4>
-            <strong>${totalSales.toLocaleString()}</strong>
-            <span className="trend positive">+12% vs last month</span>
-          </article>
-          <article className="qb-admin-stat-box">
-            <h4>Active Orders</h4>
-            <strong>{activeOrders}</strong>
-            <span className="trend warning">{Math.max(1, activeOrders)} urgent</span>
-          </article>
-          <article className="qb-admin-stat-box">
-            <h4>Total Products</h4>
-            <strong>{totalProducts.toLocaleString()}</strong>
-            <span className="trend positive">+18 added this week</span>
-          </article>
-          <article className="qb-admin-stat-box">
-            <h4>New Customers</h4>
-            <strong>{newCustomers}</strong>
-            <span className="trend positive">+8% growth rate</span>
-          </article>
+          <div className="qb-admin-stat-card">
+            <div className="header">
+              <span>TOTAL SALES</span>
+              <div className="icon-box" style={{ background: '#ecfdf5', color: '#10b981' }}>₹</div>
+            </div>
+            <strong>₹{stats.totalSales?.toLocaleString() || '0'}</strong>
+            <div className="trend positive">↗ 12.5% vs last week</div>
+          </div>
+
+          <div className="qb-admin-stat-card">
+            <div className="header">
+              <span>TOTAL ORDERS</span>
+              <div className="icon-box" style={{ background: '#eff6ff', color: '#3b82f6' }}>📦</div>
+            </div>
+            <strong>{stats.totalOrders || '0'}</strong>
+            <div className="trend positive">↗ 8.2% vs last week</div>
+          </div>
+
+          <div className="qb-admin-stat-card">
+            <div className="header">
+              <span>ACTIVE PRODUCTS</span>
+              <div className="icon-box" style={{ background: '#fef2f2', color: '#ef4444' }}>🛍</div>
+            </div>
+            <strong>{stats.activeProducts || '0'}</strong>
+            <div className="trend stable">→ No change</div>
+          </div>
+
+          <div className="qb-admin-stat-card">
+            <div className="header">
+              <span>CUSTOMERS</span>
+              <div className="icon-box" style={{ background: '#fdf4ff', color: '#a855f7' }}>👥</div>
+            </div>
+            <strong>{stats.newCustomers || '0'}</strong>
+            <div className="trend positive">↗ 4.1% vs last week</div>
+          </div>
         </section>
 
-        <section className="qb-admin-content-grid">
-          <article className="qb-admin-orders-card">
+        <div className="qb-admin-content-grid">
+          {/* Recent Orders */}
+          <div className="qb-admin-card">
             <div className="qb-admin-card-header">
               <h3>Recent Orders</h3>
               <button onClick={() => navigate("/admin/orders")}>View All Orders</button>
             </div>
-
-            {filteredOrders.length === 0 ? (
-              <div className="empty-state" style={{ margin: "1rem 0" }}>
-                <p>No matching orders found.</p>
-              </div>
-            ) : (
-              <table className="qb-admin-orders-table">
-                <thead>
+            <table className="qb-admin-table">
+              <thead>
+                <tr>
+                  <th>Order ID</th>
+                  <th>Customer</th>
+                  <th>Status</th>
+                  <th>Amount</th>
+                </tr>
+              </thead>
+              <tbody>
+                {stats.recentOrders?.length > 0 ? (
+                  stats.recentOrders.map(order => (
+                    <tr key={order._id}>
+                      <td style={{ fontWeight: 700 }}>#QB-{order._id.slice(-4).toUpperCase()}</td>
+                      <td>{order.user?.name || 'Guest Customer'}</td>
+                      <td>
+                        <span className={`status-badge ${(order.order_status || 'pending').toLowerCase()}`}>
+                          {order.order_status || 'Pending'}
+                        </span>
+                      </td>
+                      <td style={{ fontWeight: 800 }}>₹{order.total_amount?.toLocaleString()}</td>
+                    </tr>
+                  ))
+                ) : (
                   <tr>
-                    <th>Order ID</th>
-                    <th>Customer</th>
-                    <th>Status</th>
-                    <th>Total</th>
-                    <th>Date</th>
+                    <td colSpan="4" style={{ textAlign: 'center', padding: '3rem', color: 'var(--admin-text-muted)' }}>
+                      No recent orders to display.
+                    </td>
                   </tr>
-                </thead>
-                <tbody>
-                  {filteredOrders.map((order) => {
-                    const customerName =
-                      order.user?.name || order.user?.email || "Unknown";
-                    const status = (order.order_status || order.status || "pending").toLowerCase();
-                    const amount =
-                      order.total_amount || order.totalAmount || order.total || 0;
+                )}
+              </tbody>
+            </table>
+          </div>
 
-                    return (
-                      <tr key={order._id}>
-                        <td className="order-id">QB-{order._id.slice(-4).toUpperCase()}</td>
-                        <td>
-                          <div className="customer-cell">
-                            <span className="avatar">{getInitials(customerName)}</span>
-                            <span>{customerName}</span>
-                          </div>
-                        </td>
-                        <td>
-                          <span className={`mini-status ${getStatusClass(status)}`}>
-                            {status.charAt(0).toUpperCase() + status.slice(1)}
-                          </span>
-                        </td>
-                        <td>${Number(amount).toFixed(2)}</td>
-                        <td>
-                          {order.createdAt
-                            ? new Date(order.createdAt).toLocaleDateString("en-US", {
-                                month: "short",
-                                day: "numeric",
-                                year: "numeric",
-                              })
-                            : "-"}
-                        </td>
-                      </tr>
-                    );
-                  })}
-                </tbody>
-              </table>
-            )}
-          </article>
-
-          <aside className="qb-admin-right-rail">
-            <article className="qb-admin-health-card">
-              <h3>Store Health</h3>
-
-              <div className="health-row">
-                <div>
-                  <span>Fulfillment Rate</span>
-                  <strong>{fulfillmentRate}%</strong>
+          {/* Side Panels */}
+          <div>
+            <div className="qb-admin-card">
+              <div className="qb-admin-card-header">
+                <h3>System Health</h3>
+              </div>
+              <div className="health-metrics">
+                <div className="metric-item">
+                  <div className="metric-header">
+                    <span>Server Uptime</span>
+                    <span>99.9%</span>
+                  </div>
+                  <div className="metric-bar-bg">
+                    <div className="metric-bar-fill" style={{ width: '99.9%', background: '#10b981' }}></div>
+                  </div>
                 </div>
-                <div className="bar"><span style={{ width: `${fulfillmentRate}%` }} /></div>
-              </div>
-
-              <div className="health-row">
-                <div>
-                  <span>Customer Satisfaction</span>
-                  <strong>{customerSatisfaction.toFixed(1)}/5.0</strong>
+                <div className="metric-item">
+                  <div className="metric-header">
+                    <span>API Latency</span>
+                    <span>124ms</span>
+                  </div>
+                  <div className="metric-bar-bg">
+                    <div className="metric-bar-fill" style={{ width: '85%', background: '#3b82f6' }}></div>
+                  </div>
                 </div>
-                <div className="bar"><span style={{ width: `${(customerSatisfaction / 5) * 100}%` }} /></div>
-              </div>
-
-              <div className="health-row">
-                <div>
-                  <span>Inventory Level</span>
-                  <strong>{inventoryLevel}</strong>
+                <div className="metric-item">
+                  <div className="metric-header">
+                    <span>Storage Usage</span>
+                    <span>42%</span>
+                  </div>
+                  <div className="metric-bar-bg">
+                    <div className="metric-bar-fill" style={{ width: '42%', background: '#f59e0b' }}></div>
+                  </div>
                 </div>
-                <div className="bar"><span style={{ width: inventoryLevel === "Good" ? "76%" : inventoryLevel === "Medium" ? "48%" : "24%" }} /></div>
               </div>
+            </div>
 
-              <div className="recommendation-box">
-                Recommendation: Restock handcrafted categories soon. Only 3 units
-                remaining in low-stock groups.
+            <div className="qb-admin-featured-item">
+              <img 
+                src="https://images.unsplash.com/photo-1542838132-92c53300491e?q=80&w=500&auto=format&fit=crop" 
+                alt="Promotion" 
+              />
+              <div className="qb-admin-featured-content">
+                <span className="featured-tag">Market Highlight</span>
+                <h4>Artisanal Sourdough</h4>
+                <p>Trending +40% this week</p>
               </div>
-            </article>
-
-            <article className="qb-admin-featured-card">
-              <div>
-                <span>Featured Product</span>
-                <h4>Rustic Earth Ceramic Set</h4>
-                <p>Edit listing</p>
-              </div>
-            </article>
-          </aside>
-        </section>
-
-        <footer className="qb-admin-footer">
-          <div>
-            <h4>QuickBazaar</h4>
-            <p>
-              The modern heritage marketplace for artisanal goods and local
-              treasures.
-            </p>
+            </div>
           </div>
-          <div>
-            <h5>System</h5>
-            <a href="#">Documentation</a>
-            <a href="#">API Keys</a>
-          </div>
-          <div>
-            <h5>Support</h5>
-            <a href="#">Help Center</a>
-            <a href="#">Community</a>
-          </div>
-          <div>
-            <h5>Legal</h5>
-            <a href="#">Privacy Policy</a>
-            <a href="#">Terms of Service</a>
-          </div>
-        </footer>
+        </div>
       </main>
     </div>
   );

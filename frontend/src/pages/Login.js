@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import axios from "axios";
 import { useNavigate, Link } from "react-router-dom";
+import "./AuthRedesign.css";
 
 const API_BASE_URL =
   process.env.REACT_APP_API_BASE_URL ||
@@ -11,7 +12,6 @@ const API_BASE_URL =
 function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [keepLoggedIn, setKeepLoggedIn] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const navigate = useNavigate();
@@ -22,129 +22,101 @@ function Login() {
     setError("");
 
     try {
-      const response = await axios.post(
-        `${API_BASE_URL}/api/auth/login`,
-        {
-          email,
-          password,
-        },
-      );
+      const response = await axios.post(`${API_BASE_URL}/api/auth/login`, {
+        email,
+        password,
+      });
 
       localStorage.setItem("token", response.data.token);
-
-      // Fetch user profile and store in localStorage for navbar
-      try {
-        const profileRes = await axios.get(
-          `${API_BASE_URL}/api/auth/profile`,
-          { headers: { Authorization: `Bearer ${response.data.token}` } },
-        );
-        localStorage.setItem("user", JSON.stringify(profileRes.data));
-      } catch {
-        localStorage.removeItem("user");
-      }
-
+      localStorage.setItem("user", JSON.stringify(response.data.user));
       navigate("/");
     } catch (err) {
       console.error("Login error:", err);
-      setError(
-        err.response?.data?.message || "Login failed. Please try again.",
-      );
+      setError(err.response?.data?.message || "Login failed. Please try again.");
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div className="qb-auth-page">
-      <div className="qb-auth-orb left" />
-      <div className="qb-auth-orb right" />
+    <div className="qb-auth-page fade-in">
+      {/* Left Hero Side */}
+      <div className="qb-auth-hero">
+        <img 
+          src="https://images.unsplash.com/photo-1542838132-92c53300491e?q=80&w=1974&auto=format&fit=crop" 
+          className="qb-auth-hero-img"
+          alt="Artisanal Marketplace" 
+        />
+        <div className="qb-auth-hero-card">
+          <div className="icon-box">🎒</div>
+          <h1>QuickBazaar</h1>
+          <p>
+            Experience the finest artisanal quality from local neighborhood makers. 
+            Curated, fresh, and delivered with care.
+          </p>
+        </div>
+      </div>
 
-      <div className="qb-auth-shell qb-auth-shell-login">
-        <header className="qb-auth-brand qb-auth-brand-center">QuickBazaar</header>
+      {/* Right Form Side */}
+      <div className="qb-auth-form-side">
+        <div className="qb-auth-form-shell">
+          <Link to="/" className="qb-auth-back-link">← Back to Home</Link>
+          <h2>Welcome Back</h2>
+          <p>Sign in to continue your artisanal journey.</p>
 
-        <section className="qb-auth-card">
-          <h1>Welcome Back</h1>
-          <p>Discover artisanal quality at your doorstep</p>
-
-          <div className="qb-auth-role-toggle" role="tablist" aria-label="Role">
-            <button type="button" className="active" aria-selected="true">
+          <div className="qb-auth-toggle">
+            <button type="button" className="active">
               Customer
             </button>
-            <button
-              type="button"
-              aria-selected="false"
-              onClick={() => navigate("/admin/login")}
-            >
-              Admin
+            <button type="button" onClick={() => navigate("/admin/login")}>
+              Merchant / Admin
             </button>
           </div>
 
-          {error && <div className="qb-auth-error">{error}</div>}
+          {error && <div className="qb-auth-alert error">{error}</div>}
 
           <form onSubmit={handleLogin} className="qb-auth-form">
-            <label htmlFor="login-email">Email Address</label>
-            <input
-              id="login-email"
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              placeholder="hello@quickbazaar.com"
-              required
-              disabled={loading}
-            />
-
-            <div className="qb-auth-inline-label">
-              <label htmlFor="login-password">Password</label>
-              <a href="mailto:support@quickbazaar.com">Forgot password?</a>
+            <div className="qb-auth-group">
+              <label>Email Address</label>
+              <div className="qb-auth-input-wrapper">
+                <span className="input-icon">✉</span>
+                <input
+                  type="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  placeholder="hello@example.com"
+                  required
+                  disabled={loading}
+                />
+              </div>
             </div>
-            <input
-              id="login-password"
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              placeholder="••••••••"
-              required
-              disabled={loading}
-            />
 
-            <label className="qb-auth-checkbox" htmlFor="keep-logged-in">
-              <input
-                id="keep-logged-in"
-                type="checkbox"
-                checked={keepLoggedIn}
-                onChange={(e) => setKeepLoggedIn(e.target.checked)}
-              />
-              <span>Keep me logged in</span>
-            </label>
+            <div className="qb-auth-group">
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <label>Password</label>
+                <Link to="#0" style={{ fontSize: '0.8rem', color: 'var(--qb-purple)', textDecoration: 'none', fontWeight: 700 }}>Forgot?</Link>
+              </div>
+              <div className="qb-auth-input-wrapper">
+                <span className="input-icon">🔒</span>
+                <input
+                  type="password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  placeholder="••••••••"
+                  required
+                  disabled={loading}
+                />
+              </div>
+            </div>
 
-            <button type="submit" className="qb-auth-submit" disabled={loading}>
-              {loading ? "Logging in..." : "Login"}
+            <button type="submit" className="qb-auth-submit-btn" disabled={loading}>
+              {loading ? "Signing In..." : "Sign In →"}
             </button>
           </form>
 
-          <div className="qb-auth-divider">OR CONTINUE WITH</div>
-
-          <div className="qb-auth-socials">
-            <button type="button">Google</button>
-            <button type="button">Apple</button>
+          <div className="qb-auth-switch-row">
+            Don't have an account? <Link to="/register">Create an account</Link>
           </div>
-
-          <p className="qb-auth-switch">
-            Don&apos;t have an account? <Link to="/register">Register</Link>
-          </p>
-        </section>
-
-        <div className="qb-auth-bottom-links">
-          <button type="button">Privacy Policy</button>
-          <button type="button">Terms of Service</button>
-          <button type="button">Contact Support</button>
-        </div>
-        <p className="qb-auth-copyright">
-          © 2024 QuickBazaar. Artisanal Quality Guaranteed.
-        </p>
-
-        <div className="qb-auth-store-link">
-          <Link to="/">Back to Store</Link>
         </div>
       </div>
     </div>
